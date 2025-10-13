@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "275127589711",
+    "project_id": "skydive-64e86",
+    "storage_bucket": "skydive-64e86.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:275127589711:android:86a847950d800dd16a033a",
+        "android_client_info": {
+          "package_name": "com.alalmiyaalhura.skydive"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCzg2LtY4cl86xlq_P7k_knJ8mmJC4cOWI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

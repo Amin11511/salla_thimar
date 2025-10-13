@@ -1,0 +1,28 @@
+class NamedRoutes {
+  static const splash = "/splash";
+  static const String login = '/login';
+  static const String home = '/home';
+  static const String homeTab = '/homeTab';
+  static const String favoriteTab = '/favoriteTab';
+  static const String myOrdersTab = '/myOrdersTab';
+  static const String notificationTab = '/notificationTab';
+  static const String accountTab = '/accountTab';
+  static const String register = '/register';
+  static const String verifyPhone = '/verify_phone';
+  static const String forgetPassword = '/forget_password';
+  static const String confirmPhone = '/confirm_phone';
+  static const String confirmPassword = '/confirm_password';
+  static const String about = '/about';
+  static const String contact = '/contact';
+  static const String faqs = '/faqs';
+  static const String address = '/address';
+  static const String addAddress = '/addAddress';
+  static const String editAddress = '/editAddress';
+  static const String wallet = '/wallet';
+  static const String payment = '/payment';
+  static const String charge = '/charge';
+  static const String transaction = '/transaction';
+  static const String policy = '/policy';
+  static const String sugAndComp = '/sugAndComp';
+  static const String updateProfile = '/updateProfile';
+}
