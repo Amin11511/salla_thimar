@@ -12,7 +12,7 @@ class HomeService {
   Future<CategoryResponse> getCategories() async {
     try {
       final response = await _serverGate.getFromServer(
-        url: '/categories',
+        url: 'categories',
       );
       if (response.success) {
         return CategoryResponse.fromJson(response.data);
@@ -27,7 +27,7 @@ class HomeService {
   Future<ProductResponse> fetchProductsByCategory(int categoryId) async {
     try {
       final response = await _serverGate.getFromServer(
-        url: '/categories/$categoryId',
+        url: 'categories/$categoryId',
       );
       if (response.success) {
         return ProductResponse.fromJson(response.data);
@@ -42,7 +42,7 @@ class HomeService {
   Future<List<SliderData>> fetchSliders() async {
     try {
       final response = await _serverGate.getFromServer(
-        url: '/sliders',
+        url: 'sliders',
       );
       if (response.success) {
         final data = response.data['data'] as List;
@@ -58,7 +58,7 @@ class HomeService {
   Future<List<ProductModel>> getProducts() async {
     try {
       final response = await _serverGate.getFromServer(
-        url: '/products',
+        url: 'products',
       );
       if (response.success) {
         final data = response.data['data'] as List;

@@ -13,7 +13,6 @@ import '../../../core/widgets/custom_app_bar/custom_app_bar.dart';
 import '../../../gen/assets.gen.dart';
 import '../../home/tabs/account_tab/cubit/profile_cubit.dart';
 import '../../home/tabs/account_tab/cubit/profile_state.dart';
-import '../../home/tabs/account_tab/model/profile_model.dart';
 import '../cubit/update_profile_cubit.dart';
 import '../cubit/update_profile_state.dart';
 
@@ -37,21 +36,16 @@ class _UpdateProfileState extends State<UpdateProfile> {
   @override
   void initState() {
     super.initState();
-    final profileState = context.read<ProfileCubit>().state;
-    if (profileState is ProfileSuccess) {
-      final profile = profileState.profileData;
-      _fullnameController = TextEditingController(text: profile.fullname);
-      _phoneController = TextEditingController(text: profile.phone.replaceFirst('966', ''));
-      _cityController = TextEditingController(text: 'جدة');
-      _passwordController = TextEditingController();
-      _passwordConfirmationController = TextEditingController();
-    } else {
-      _fullnameController = TextEditingController();
-      _phoneController = TextEditingController();
-      _cityController = TextEditingController(text: 'جدة');
-      _passwordController = TextEditingController();
-      _passwordConfirmationController = TextEditingController();
-    }
+    // تهيئة الـ controllers فاضية
+    _fullnameController = TextEditingController();
+    _phoneController = TextEditingController();
+    _cityController = TextEditingController(text: 'جدة');
+    _passwordController = TextEditingController();
+    _passwordConfirmationController = TextEditingController();
+    // استدعاء fetchProfile بعد بناء الـ widget tree
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<ProfileCubit>().fetchProfile();
+    });
   }
 
   @override
@@ -65,7 +59,6 @@ class _UpdateProfileState extends State<UpdateProfile> {
   }
 
   Future<void> _pickImage() async {
-    // طلب إذن الوصول إلى الجاليري
     final status = await Permission.photos.request();
     if (status.isGranted) {
       final picker = ImagePicker();
@@ -74,7 +67,7 @@ class _UpdateProfileState extends State<UpdateProfile> {
         setState(() {
           _imagePath = pickedFile.path;
         });
-        print('Image selected: ${_imagePath}'); // للتحقق
+        print('Image selected: $_imagePath');
       } else {
         print('No image selected');
       }
@@ -90,7 +83,7 @@ class _UpdateProfileState extends State<UpdateProfile> {
         ),
       );
       if (status.isPermanentlyDenied) {
-        openAppSettings(); // فتح إعدادات التطبيق إذا تم رفض الإذن نهائيًا
+        openAppSettings();
       }
     }
   }
@@ -142,7 +135,7 @@ class _UpdateProfileState extends State<UpdateProfile> {
               _showPasswordConfirmationDialog(context);
             },
             style: ElevatedButton.styleFrom(
-              backgroundColor: AppThemes.greenColor.color, // ✅ زر أخضر
+              backgroundColor: AppThemes.greenColor.color,
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
               padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
             ),
@@ -163,88 +156,89 @@ class _UpdateProfileState extends State<UpdateProfile> {
   void _showPasswordConfirmationDialog(BuildContext context) {
     showDialog(
       context: context,
-      builder: (context) => AlertDialog(
-        backgroundColor: Colors.white,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(16),
-        ),
-        title: Text(
-          'تأكيد كلمة المرور',
-          textDirection: TextDirection.rtl,
-          style: TextStyle(
-            fontFamily: 'Tajawal',
-            fontSize: 18,
-            fontWeight: FontWeight.bold,
-            color: AppThemes.greenColor.color,
+      builder: (dialogContext) => Builder(
+        builder: (newContext) => AlertDialog(
+          backgroundColor: Colors.white,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16.r),
           ),
-        ),
-        content: AppField(
-          hintText: 'تأكيد كلمة المرور',
-          prefixIcon: Assets.images.lock.image(width: 20.w, height: 20.h,),
-          controller: _passwordConfirmationController,
-          validator: (value) {
-            if (value == null || value.isEmpty) {
-              return 'الرجاء إدخال تأكيد كلمة المرور';
-            }
-            if (value != _passwordController.text) {
-              return 'كلمة المرور غير متطابقة';
-            }
-            return null;
-          },
-        ),
-        actionsPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-        actionsAlignment: MainAxisAlignment.spaceBetween,
-        actions: [
-          TextButton(
-            onPressed: () {
-              Navigator.pop(context);
-            },
-            style: TextButton.styleFrom(
-              foregroundColor: AppThemes.greenColor.color,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10),
-              ),
-            ),
-            child: const Text(
-              'إلغاء',
-              style: TextStyle(
-                fontFamily: 'Tajawal',
-                fontSize: 16,
-              ),
+          title: Text(
+            'تأكيد كلمة المرور',
+            textDirection: TextDirection.rtl,
+            style: TextStyle(
+              fontFamily: 'Tajawal',
+              fontSize: 18.sp,
+              fontWeight: FontWeight.bold,
+              color: AppThemes.greenColor.color,
             ),
           ),
-          ElevatedButton(
-            onPressed: () {
-              if (_formKey.currentState!.validate()) {
-                context.read<UpdateProfileCubit>().updateProfile(
-                  fullname: _fullnameController.text,
-                  phone: _phoneController.text,
-                  cityId: 7,
-                  password: _passwordController.text.isNotEmpty ? _passwordController.text : null,
-                  passwordConfirmation: _passwordConfirmationController.text.isNotEmpty ? _passwordConfirmationController.text : null,
-                  imagePath: _imagePath,
-                );
-                Navigator.pop(context);
+          content: AppField(
+            hintText: 'تأكيد كلمة المرور',
+            prefixIcon: Assets.images.lock.image(width: 20.w, height: 20.h),
+            controller: _passwordConfirmationController,
+            validator: (value) {
+              if (value == null || value.isEmpty) {
+                return 'الرجاء إدخال تأكيد كلمة المرور';
               }
+              if (value != _passwordController.text) {
+                return 'كلمة المرور غير متطابقة';
+              }
+              return null;
             },
-            style: ElevatedButton.styleFrom(
-              backgroundColor: AppThemes.greenColor.color,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10),
-              ),
-            ),
-            child: const Text(
-              'تأكيد',
-              style: TextStyle(
-                fontFamily: 'Tajawal',
-                fontSize: 16,
-                color: Colors.white,
-              ),
-            ),
           ),
-        ],
+          actionsPadding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
+          actionsAlignment: MainAxisAlignment.spaceBetween,
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(newContext);
+              },
+              style: TextButton.styleFrom(
+                foregroundColor: AppThemes.greenColor.color,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10.r),
+                ),
+              ),
+              child: Text(
+                'إلغاء',
+                style: TextStyle(
+                  fontFamily: 'Tajawal',
+                  fontSize: 16.sp,
+                ),
+              ),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                if (_formKey.currentState!.validate()) {
+                  newContext.read<UpdateProfileCubit>().updateProfile(
+                    fullname: _fullnameController.text,
+                    phone: '$_selectedCountryCode${_phoneController.text}',
+                    cityId: 7,
+                    password: _passwordController.text.isNotEmpty ? _passwordController.text : null,
+                    passwordConfirmation: _passwordConfirmationController.text.isNotEmpty ? _passwordConfirmationController.text : null,
+                    imagePath: _imagePath,
+                  );
+                  Navigator.pop(newContext);
+                }
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppThemes.greenColor.color,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10.r),
+                ),
+              ),
+              child: Text(
+                'تأكيد',
+                style: TextStyle(
+                  fontFamily: 'Tajawal',
+                  fontSize: 16.sp,
+                  color: Colors.white,
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
-
     );
   }
 
@@ -289,127 +283,153 @@ class _UpdateProfileState extends State<UpdateProfile> {
             },
             builder: (context, state) {
               if (state is UpdateProfileLoading) {
-                return Center(child: CircularProgressIndicator(color: AppThemes.greenColor.color));
+                return const Center(child: CircularProgressIndicator());
+              } else if (state is UpdateProfileError) {
+                return Center(child: Text(state.message));
               }
               return Form(
                 key: _formKey,
                 child: SingleChildScrollView(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      BlocBuilder<ProfileCubit, ProfileState>(
-                        builder: (context, profileState) {
-                          ProfileData? profile;
-                          if (profileState is ProfileSuccess) {
-                            profile = profileState.profileData;
-                          }
-                          return Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              GestureDetector(
-                                onTap: () {
-                                  print('Image tapped'); // للتحقق من النقر
-                                  _pickImage();
-                                },
-                                child: Container(
-                                  width: 75,
-                                  height: 75,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(8),
-                                    border: Border.all(color: AppThemes.lightGrey.color, width: 2),
-                                  ),
-                                  child: Stack(
-                                    alignment: Alignment.center,
-                                    children: [
-                                      ClipRRect(
-                                        borderRadius: BorderRadius.circular(6),
-                                        child: _imagePath != null
-                                            ? Image.file(
-                                          File(_imagePath!),
-                                          width: 75,
-                                          height: 75,
-                                          fit: BoxFit.cover,
-                                          errorBuilder: (context, error, stackTrace) => Image.asset(
-                                            Assets.images.profile.path,
-                                            width: 75,
-                                            height: 75,
-                                            fit: BoxFit.cover,
-                                          ),
-                                        )
-                                            : (profile?.image != null
-                                            ? Image.network(
-                                          profile!.image!,
-                                          width: 75,
-                                          height: 75,
-                                          fit: BoxFit.cover,
-                                          errorBuilder: (context, error, stackTrace) => Image.asset(
-                                            Assets.images.profile.path,
-                                            width: 75,
-                                            height: 75,
-                                            fit: BoxFit.cover,
-                                          ),
-                                        )
-                                            : Image.asset(
-                                          Assets.images.profile.path,
-                                          width: 75,
-                                          height: 75,
-                                          fit: BoxFit.cover,
-                                        )),
+                  child: ConstrainedBox(
+                    constraints: BoxConstraints(
+                      minHeight: MediaQuery.of(context).size.height - MediaQuery.of(context).padding.top - 56,
+                    ),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        BlocBuilder<ProfileCubit, ProfileState>(
+                          builder: (context, profileState) {
+                            if (profileState is ProfileLoading) {
+                              return const Center(child: CircularProgressIndicator());
+                            } else if (profileState is ProfileError) {
+                              return Center(child: Text(profileState.message));
+                            } else if (profileState is ProfileSuccess) {
+                              final profile = profileState.profileData;
+                              // تهيئة الحقول مرة واحدة فقط إذا لم تكن قد تم تهيئتها
+                              if (_fullnameController.text.isEmpty) {
+                                _fullnameController.text = profile.fullname;
+                              }
+                              if (_phoneController.text.isEmpty) {
+                                _phoneController.text = profile.phone.startsWith('+966')
+                                    ? profile.phone.replaceFirst('+966', '')
+                                    : profile.phone;
+                              }
+                              if (_cityController.text.isEmpty) {
+                                _cityController.text = profile.city ?? 'جدة';
+                              }
+                              return Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  GestureDetector(
+                                    onTap: () {
+                                      print('Image tapped');
+                                      _pickImage();
+                                    },
+                                    child: Container(
+                                      width: 75.w,
+                                      height: 75.h,
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(8.r),
+                                        border: Border.all(color: AppThemes.lightGrey.color, width: 2.w),
                                       ),
-                                      // Overlay للدلالة على الاختيار
-                                      Container(
-                                        width: 75,
-                                        height: 75,
-                                        decoration: BoxDecoration(
-                                          borderRadius: BorderRadius.circular(6),
-                                          color: Colors.black.withOpacity(0.4),
-                                        ),
-                                        child: const Icon(
-                                          Icons.camera_alt,
-                                          color: Colors.white,
-                                          size: 30,
-                                        ),
+                                      child: Stack(
+                                        alignment: Alignment.center,
+                                        children: [
+                                          ClipRRect(
+                                            borderRadius: BorderRadius.circular(6.r),
+                                            child: _imagePath != null
+                                                ? Image.file(
+                                              File(_imagePath!),
+                                              width: 75.w,
+                                              height: 75.h,
+                                              fit: BoxFit.cover,
+                                              errorBuilder: (context, error, stackTrace) => Image.asset(
+                                                Assets.images.profile.path,
+                                                width: 75.w,
+                                                height: 75.h,
+                                                fit: BoxFit.cover,
+                                              ),
+                                            )
+                                                : (profile.image != null
+                                                ? Image.network(
+                                              profile.image!,
+                                              width: 75.w,
+                                              height: 75.h,
+                                              fit: BoxFit.cover,
+                                              errorBuilder: (context, error, stackTrace) => Image.asset(
+                                                Assets.images.profile.path,
+                                                width: 75.w,
+                                                height: 75.h,
+                                                fit: BoxFit.cover,
+                                              ),
+                                            )
+                                                : Image.asset(
+                                              Assets.images.profile.path,
+                                              width: 75.w,
+                                              height: 75.h,
+                                              fit: BoxFit.cover,
+                                            )),
+                                          ),
+                                          Container(
+                                            width: 75.w,
+                                            height: 75.h,
+                                            decoration: BoxDecoration(
+                                              borderRadius: BorderRadius.circular(6.r),
+                                              color: Colors.black.withOpacity(0.4),
+                                            ),
+                                            child: Icon(
+                                              Icons.camera_alt,
+                                              color: Colors.white,
+                                              size: 30.sp,
+                                            ),
+                                          ),
+                                        ],
                                       ),
-                                    ],
+                                    ),
                                   ),
-                                ),
-                              ),
-                              const SizedBox(height: 10),
-                              Text(
-                                profile?.fullname ?? 'محمد علي',
-                                textDirection: TextDirection.rtl,
-                                style: TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold,
-                                  fontFamily: "Tajawal",
-                                  color: AppThemes.greenColor.color,
-                                ),
-                              ),
-                              const SizedBox(height: 5),
-                              Text(
-                                '${_selectedCountryCode ?? '+966'}${_phoneController.text}',
-                                textDirection: TextDirection.ltr,
-                                style: TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold,
-                                  fontFamily: "Tajawal",
-                                  color: AppThemes.lightGrey.color,
-                                ),
-                              ),
-                            ],
-                          );
-                        },
-                      ),
-                      const SizedBox(height: 20),
-                      // باقي الحقول (اسم المستخدم، رقم الجوال، المدينة، كلمة المرور، زر التعديل)
-                      Row(
-                        children: [
-                          Expanded(
-                            child: AppField(
+                                  SizedBox(height: 10.h),
+                                  Text(
+                                    profile.fullname,
+                                    textDirection: TextDirection.rtl,
+                                    style: TextStyle(
+                                      fontSize: 18.sp,
+                                      fontWeight: FontWeight.bold,
+                                      fontFamily: "Tajawal",
+                                      color: AppThemes.greenColor.color,
+                                    ),
+                                  ),
+                                  SizedBox(height: 5.h),
+                                  Text(
+                                    profile.phone,
+                                    textDirection: TextDirection.ltr,
+                                    style: TextStyle(
+                                      fontSize: 18.sp,
+                                      fontWeight: FontWeight.bold,
+                                      fontFamily: "Tajawal",
+                                      color: AppThemes.lightGrey.color,
+                                    ),
+                                  ),
+                                ],
+                              );
+                            }
+                            return const Center(child: Text('جاري تحميل بيانات البروفايل...'));
+                          },
+                        ),
+                        SizedBox(height: 20.h),
+                        BlocBuilder<ProfileCubit, ProfileState>(
+                          buildWhen: (previous, current) =>
+                          current is ProfileSuccess || current is ProfileLoading || current is ProfileError,
+                          builder: (context, state) {
+                            if (state is ProfileLoading) {
+                              return const Center(child: CircularProgressIndicator());
+                            } else if (state is ProfileError) {
+                              return Center(child: Text(state.message));
+                            }
+                            return AppField(
                               hintText: "اسم المستخدم",
-                              suffixIcon: Assets.images.profileIc.image(width: 20.w, height: 20.h),
+                              prefixIcon: Assets.images.profileIc.image(width: 20.w, height: 20.h),
                               controller: _fullnameController,
                               validator: (value) {
                                 if (value == null || value.isEmpty) {
@@ -417,91 +437,109 @@ class _UpdateProfileState extends State<UpdateProfile> {
                                 }
                                 return null;
                               },
-                            ),
-                          ),
-                        ],
-                      ),
-                      Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Expanded(
-                            flex: 8,
-                            child: AppField(
-                              hintText: "رقم الجوال",
-                              suffixIcon: Assets.images.profileIc.image(width: 20.w, height: 20.h),
-                              controller: _phoneController,
-                              validator: (value) {
-                                if (value == null || value.isEmpty) {
-                                  return 'الرجاء إدخال رقم الجوال';
-                                }
-                                return null;
-                              },
-                            ),
-                          ),
-                          const SizedBox(width: 10),
-                          Expanded(
-                            flex: 2,
-                            child: Container(
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(16),
-                                border: Border.all(
-                                  color: AppThemes.lightLightGrey.color,
-                                  width: 1.5,
+                            );
+                          },
+                        ),
+                        SizedBox(height: 10.h),
+                        Row(
+                          children: [
+                            Expanded(
+                              flex: 2,
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(16.r),
+                                  border: Border.all(
+                                    color: AppThemes.lightLightGrey.color,
+                                    width: 1.5.w,
+                                  ),
+                                ),
+                                child: CountryCodePicker(
+                                  onChanged: (country) {
+                                    setState(() {
+                                      _selectedCountryCode = country.dialCode;
+                                    });
+                                  },
+                                  initialSelection: 'SA',
+                                  favorite: const ['+966', 'SA'],
+                                  showCountryOnly: false,
+                                  showOnlyCountryWhenClosed: false,
+                                  alignLeft: false,
+                                  builder: (country) {
+                                    final uri = country?.flagUri;
+                                    return Padding(
+                                      padding: EdgeInsets.all(8.0.r),
+                                      child: Column(
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        children: [
+                                          if (uri != null && uri.isNotEmpty)
+                                            Image.asset(
+                                              uri,
+                                              package: 'country_code_picker',
+                                              width: 32.w,
+                                              height: 20.h,
+                                              fit: BoxFit.contain,
+                                              errorBuilder: (context, error, stackTrace) => const Icon(Icons.flag),
+                                            )
+                                          else
+                                            Icon(Icons.flag, size: 20.sp),
+                                          SizedBox(height: 6.h),
+                                          Text(
+                                            country?.dialCode ?? '+966',
+                                            style: TextStyle(
+                                              fontSize: 14.sp,
+                                              fontFamily: "Tajawal",
+                                              fontWeight: FontWeight.bold,
+                                              color: AppThemes.greenColor.color,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    );
+                                  },
                                 ),
                               ),
-                              child: CountryCodePicker(
-                                onChanged: (country) {
-                                  setState(() {
-                                    _selectedCountryCode = country.dialCode;
-                                  });
-                                },
-                                initialSelection: 'SA',
-                                favorite: const ['+966', 'SA'],
-                                showCountryOnly: false,
-                                showOnlyCountryWhenClosed: false,
-                                alignLeft: false,
-                                builder: (country) {
-                                  final uri = country?.flagUri;
-                                  return Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Column(
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      children: [
-                                        if (uri != null && uri.isNotEmpty)
-                                          Image.asset(
-                                            uri,
-                                            package: 'country_code_picker',
-                                            width: 32,
-                                            height: 20,
-                                            fit: BoxFit.contain,
-                                          )
-                                        else
-                                          const SizedBox(height: 20),
-                                        const SizedBox(height: 6),
-                                        Text(
-                                          country?.dialCode ?? '',
-                                          style: TextStyle(
-                                            fontSize: 14,
-                                            fontFamily: "Tajawal",
-                                            fontWeight: FontWeight.bold,
-                                            color: AppThemes.greenColor.color,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
+                            ),
+                            SizedBox(width: 10.w),
+                            Expanded(
+                              flex: 8,
+                              child: BlocBuilder<ProfileCubit, ProfileState>(
+                                buildWhen: (previous, current) =>
+                                current is ProfileSuccess || current is ProfileLoading || current is ProfileError,
+                                builder: (context, state) {
+                                  if (state is ProfileLoading) {
+                                    return const Center(child: CircularProgressIndicator());
+                                  } else if (state is ProfileError) {
+                                    return Center(child: Text(state.message));
+                                  }
+                                  return AppField(
+                                    hintText: "رقم الجوال",
+                                    prefixIcon: Assets.images.profileIc.image(width: 20.w, height: 20.h),
+                                    controller: _phoneController,
+                                    validator: (value) {
+                                      if (value == null || value.isEmpty) {
+                                        return 'الرجاء إدخال رقم الجوال';
+                                      }
+                                      return null;
+                                    },
                                   );
                                 },
                               ),
                             ),
-                          ),
-                        ],
-                      ),
-                      Row(
-                        children: [
-                          Expanded(
-                            child: AppField(
+                          ],
+                        ),
+                        SizedBox(height: 10.h),
+                        BlocBuilder<ProfileCubit, ProfileState>(
+                          buildWhen: (previous, current) =>
+                          current is ProfileSuccess || current is ProfileLoading || current is ProfileError,
+                          builder: (context, state) {
+                            if (state is ProfileLoading) {
+                              return const Center(child: CircularProgressIndicator());
+                            } else if (state is ProfileError) {
+                              return Center(child: Text(state.message));
+                            }
+                            return AppField(
                               hintText: "المدينة",
-                              suffixIcon: Assets.images.flagIc.image(width: 20.w, height: 20.h),
+                              prefixIcon: Assets.images.flagIc.image(width: 20.w, height: 20.h),
                               controller: _cityController,
                               validator: (value) {
                                 if (value == null || value.isEmpty) {
@@ -509,16 +547,22 @@ class _UpdateProfileState extends State<UpdateProfile> {
                                 }
                                 return null;
                               },
-                            ),
-                          ),
-                        ],
-                      ),
-                      Row(
-                        children: [
-                          Expanded(
-                            child: AppField(
+                            );
+                          },
+                        ),
+                        SizedBox(height: 10.h),
+                        BlocBuilder<ProfileCubit, ProfileState>(
+                          buildWhen: (previous, current) =>
+                          current is ProfileSuccess || current is ProfileLoading || current is ProfileError,
+                          builder: (context, state) {
+                            if (state is ProfileLoading) {
+                              return const Center(child: CircularProgressIndicator());
+                            } else if (state is ProfileError) {
+                              return Center(child: Text(state.message));
+                            }
+                            return AppField(
                               hintText: "كلمة المرور",
-                              suffixIcon: Assets.images.lock.image(width: 20.w, height: 20.h),
+                              prefixIcon: Assets.images.lock.image(width: 20.w, height: 20.h),
                               controller: _passwordController,
                               validator: (value) {
                                 if (value != null && value.isNotEmpty && value.length < 6) {
@@ -526,27 +570,21 @@ class _UpdateProfileState extends State<UpdateProfile> {
                                 }
                                 return null;
                               },
-                            ),
-                          ),
-                        ],
-                      ),
-                      SizedBox(height: MediaQuery.of(context).size.height * 0.25),
-                      Row(
-                        children: [
-                          Expanded(
-                            child: AppBtn(
-                              title: "تعديل البيانات",
-                              backgroundColor: AppThemes.greenColor.color,
-                              onPressed: () {
-                                if (_formKey.currentState!.validate()) {
-                                  _showConfirmationDialog(context);
-                                }
-                              },
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
+                            );
+                          },
+                        ),
+                        SizedBox(height: MediaQuery.of(context).size.height * 0.05),
+                        AppBtn(
+                          title: "تعديل البيانات",
+                          backgroundColor: AppThemes.greenColor.color,
+                          onPressed: () {
+                            if (_formKey.currentState!.validate()) {
+                              _showConfirmationDialog(context);
+                            }
+                          },
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               );

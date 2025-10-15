@@ -23,8 +23,8 @@ class Login extends StatefulWidget {
 
 class _LoginState extends State<Login> {
   final _formKey = GlobalKey<FormState>();
-  final _phoneController = TextEditingController();
-  final _passwordController = TextEditingController();
+  final _phoneController = TextEditingController(text: "123452222");
+  final _passwordController = TextEditingController(text: "123456");
   String? _selectedCountryCode = '+966';
   final Logger _logger = Logger();
 

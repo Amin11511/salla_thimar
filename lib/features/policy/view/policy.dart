@@ -13,6 +13,9 @@ class Policy extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<PolicyCubit>().fetchPolicy();
+    });
     return Scaffold(
       appBar: CustomAppBar(
         title: "سياسة الخصوصية",

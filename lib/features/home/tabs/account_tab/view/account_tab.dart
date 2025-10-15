@@ -198,7 +198,7 @@ class _AccountTabState extends State<AccountTab> {
                             title: "الشكاوي والأقتراحات",
                             iconPath: Assets.images.info.path,
                             onTab: () {
-                              //Navigator.push(context, AppRoutes.sugAndComp);
+                              Navigator.pushNamed(context, NamedRoutes.sugAndComp);
                             },
                           ),
                           //share app

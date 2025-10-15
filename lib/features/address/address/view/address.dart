@@ -14,6 +14,10 @@ class Address extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<CurrentAddressesCubit>().fetchAddresses();
+    });
+
     return Scaffold(
       appBar: CustomAppBar(
         title: "العناوين",
@@ -26,62 +30,76 @@ class Address extends StatelessWidget {
         child: BlocConsumer<CurrentAddressesCubit, CurrentAddressesState>(
           listener: (context, state) {
             if (state is CurrentAddressesError) {
-              // showCustomMessageDialog(
-              //   context,
-              //   state.message,
-              //   autoDismissDuration: const Duration(seconds: 2),
-              // );
+              // handle error message
             } else if (state is DeleteAddressSuccess) {
-              // showCustomMessageDialog(
-              //   context,
-              //   "تم حذف العنوان بنجاح",
-              //   autoDismissDuration: const Duration(seconds: 2),
-              // );
+              // handle delete success
             } else if (state is DeleteAddressError) {
-              // showCustomMessageDialog(
-              //   context,
-              //   state.message,
-              //   autoDismissDuration: const Duration(seconds: 2),
-              // );
+              // handle delete error
             } else if (state is UpdateAddressSuccess) {
-              // showCustomMessageDialog(
-              //   context,
-              //   "تم تعديل العنوان بنجاح",
-              //   autoDismissDuration: const Duration(seconds: 2),
-              // );
+              // handle update success
             } else if (state is UpdateAddressError) {
-              // showCustomMessageDialog(
-              //   context,
-              //   state.message,
-              //   autoDismissDuration: const Duration(seconds: 2),
-              // );
+              // handle update error
             }
           },
           builder: (context, state) {
-            if (state is CurrentAddressesLoading || state is DeleteAddressLoading || state is UpdateAddressLoading) {
-              return Center(child: CircularProgressIndicator(color: AppThemes.greenColor.color));
-            } else if (state is CurrentAddressesSuccess || state is DeleteAddressSuccess || state is UpdateAddressSuccess) {
+            if (state is CurrentAddressesLoading ||
+                state is DeleteAddressLoading ||
+                state is UpdateAddressLoading) {
+              return Center(
+                  child: CircularProgressIndicator(
+                      color: AppThemes.greenColor.color));
+            }
+
+            else if (state is CurrentAddressesSuccess ||
+                state is DeleteAddressSuccess ||
+                state is UpdateAddressSuccess) {
               final addresses = state is CurrentAddressesSuccess
                   ? state.addresses
                   : state is DeleteAddressSuccess
                   ? state.addresses
                   : (state as UpdateAddressSuccess).addresses;
+
+              // هنا التعديل الرئيسي
+              if (addresses.isEmpty) {
+                return Center(
+                  child: DottedBorder(
+                    borderType: BorderType.RRect,
+                    radius: const Radius.circular(16),
+                    color: AppThemes.greenColor.color,
+                    strokeWidth: 2,
+                    dashPattern: const [6, 3],
+                    child: ElevatedButton(
+                      onPressed: () {
+                        Navigator.pushNamed(context, NamedRoutes.addAddress);
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: AppThemes.whiteColor.color,
+                        foregroundColor: AppThemes.greenColor.color,
+                        elevation: 0,
+                        padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 32),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(16),
+                        ),
+                      ),
+                      child: Text(
+                        "إضافة عنوان",
+                        textDirection: TextDirection.rtl,
+                        style: TextStyle(
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold,
+                          fontFamily: "Tajawal",
+                          color: AppThemes.greenColor.color,
+                        ),
+                      ),
+                    ),
+                  ),
+                );
+              }
+
               return Column(
                 children: [
                   const SizedBox(height: 30),
-                  addresses.isEmpty
-                      ? Center(
-                    child: Text(
-                      "لا توجد عناوين متاحة",
-                      style: TextStyle(
-                        fontFamily: "Tajawal",
-                        fontWeight: FontWeight.bold,
-                        fontSize: 18,
-                        color: AppThemes.lightGrey.color,
-                      ),
-                    ),
-                  )
-                      : Expanded(
+                  Expanded(
                     child: ListView.builder(
                       itemCount: addresses.length + 1,
                       itemBuilder: (context, index) {
@@ -134,7 +152,9 @@ class Address extends StatelessWidget {
                   ),
                 ],
               );
-            } else if (state is CurrentAddressesError) {
+            }
+
+            else if (state is CurrentAddressesError) {
               return Center(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -173,6 +193,7 @@ class Address extends StatelessWidget {
                 ),
               );
             }
+
             return const Center(child: Text("حدث خطأ غير متوقع"));
           },
         ),

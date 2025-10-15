@@ -25,4 +25,8 @@ class NamedRoutes {
   static const String policy = '/policy';
   static const String sugAndComp = '/sugAndComp';
   static const String updateProfile = '/updateProfile';
+  static const String cart = '/cart';
+  static const String orderComplete = '/orderComplete';
+  static const String categoryProduct = '/categoryProduct';
+  static const String productDetails = '/productDetails';
 }

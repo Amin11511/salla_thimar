@@ -1,27 +1,3 @@
-import 'package:skydive/features/home/tabs/home_tab/model/product_model.dart';
-
-class ProductResponse {
-  final List<Product> data;
-  final String status;
-  final String message;
-
-  ProductResponse({
-    this.data = const [],
-    this.status = 'success',
-    this.message = '',
-  });
-
-  factory ProductResponse.fromJson(Map<String, dynamic> json) {
-    return ProductResponse(
-      data: (json['data'] as List<dynamic>?)
-          ?.map((item) => Product.fromJson(item as Map<String, dynamic>))
-          ?.toList() ?? [],
-      status: json['status'] as String? ?? 'success',
-      message: json['message'] as String? ?? '',
-    );
-  }
-}
-
 class Product {
   final int id;
   final int categoryId;
@@ -31,7 +7,7 @@ class Product {
   final double priceBeforeDiscount;
   final double price;
   final double discount;
-  final double amount;
+  final int amount;
   final int isActive;
   final bool isFavorite;
   final Unit unit;
@@ -44,20 +20,22 @@ class Product {
     required this.categoryId,
     required this.title,
     required this.description,
-    this.code = '',
+    required this.code,
     required this.priceBeforeDiscount,
     required this.price,
     required this.discount,
     required this.amount,
     required this.isActive,
-    this.isFavorite = false,
+    required this.isFavorite,
     required this.unit,
-    this.images = const [],
+    required this.images,
     required this.mainImage,
     required this.createdAt,
   });
 
+  /// ✅ من الـ JSON للـ Product
   factory Product.fromJson(Map<String, dynamic> json) {
+    // معالجة اختلاف نوع الحقول (لو كانت Map أو String)
     String title;
     if (json['title'] is Map<String, dynamic>) {
       title = (json['title'] as Map<String, dynamic>)['ar'] as String? ?? '';
@@ -67,7 +45,8 @@ class Product {
 
     String description;
     if (json['description'] is Map<String, dynamic>) {
-      description = (json['description'] as Map<String, dynamic>)['ar'] as String? ?? '';
+      description =
+          (json['description'] as Map<String, dynamic>)['ar'] as String? ?? '';
     } else {
       description = json['description'] as String? ?? '';
     }
@@ -81,63 +60,64 @@ class Product {
 
     String mainImage;
     if (json['main_image'] is Map<String, dynamic>) {
-      mainImage = (json['main_image'] as Map<String, dynamic>)['url'] as String? ?? '';
+      mainImage =
+          (json['main_image'] as Map<String, dynamic>)['url'] as String? ?? '';
     } else {
       mainImage = json['main_image'] as String? ?? '';
     }
 
     String createdAt;
     if (json['created_at'] is Map<String, dynamic>) {
-      createdAt = (json['created_at'] as Map<String, dynamic>)['value'] as String? ?? '';
+      createdAt =
+          (json['created_at'] as Map<String, dynamic>)['value'] as String? ?? '';
     } else {
       createdAt = json['created_at'] as String? ?? '';
     }
 
     return Product(
-      id: json['id'] as int? ?? 0,
-      categoryId: json['category_id'] as int? ?? 0,
+      id: (json['id'] as num?)?.toInt() ?? 0,
+      categoryId: (json['category_id'] as num?)?.toInt() ?? 0,
       title: title,
       description: description,
       code: code,
-      priceBeforeDiscount: (json['price_before_discount'] as num?)?.toDouble() ?? 0.0,
+      priceBeforeDiscount:
+      (json['price_before_discount'] as num?)?.toDouble() ?? 0.0,
       price: (json['price'] as num?)?.toDouble() ?? 0.0,
       discount: (json['discount'] as num?)?.toDouble() ?? 0.0,
-      amount: (json['amount'] as num?)?.toDouble() ?? 0.0,
-      isActive: json['is_active'] as int? ?? 0,
+      amount: (json['amount'] as num?)?.toInt() ?? 0,
+      isActive: (json['is_active'] as num?)?.toInt() ?? 0,
       isFavorite: json['is_favorite'] as bool? ?? false,
       unit: Unit.fromJson(json['unit'] as Map<String, dynamic>? ?? {}),
       images: (json['images'] as List<dynamic>?)
-          ?.map((img) => img is String ? img : (img as Map<String, dynamic>)['url'] as String? ?? '')
-          .toList() ?? [],
+          ?.map((img) => img is String
+          ? img
+          : (img as Map<String, dynamic>)['url'] as String? ?? '')
+          .toList() ??
+          [],
       mainImage: mainImage,
       createdAt: createdAt,
     );
   }
 
-  ProductModel toProductModel() {
-    return ProductModel(
-      categoryId: categoryId,
-      id: id,
-      title: title,
-      description: description,
-      code: code,
-      priceBeforeDiscount: priceBeforeDiscount,
-      price: price,
-      discount: discount,
-      amount: amount.toInt(),
-      isActive: isActive,
-      isFavorite: isFavorite,
-      unit: UnitModel(
-        id: unit.id,
-        name: unit.name,
-        type: unit.type,
-        createdAt: unit.createdAt,
-        updatedAt: unit.updatedAt,
-      ),
-      images: images,
-      mainImage: mainImage,
-      createdAt: createdAt,
-    );
+  /// ✅ من الـ Product إلى JSON
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'category_id': categoryId,
+      'title': title,
+      'description': description,
+      'code': code,
+      'price_before_discount': priceBeforeDiscount,
+      'price': price,
+      'discount': discount,
+      'amount': amount,
+      'is_active': isActive,
+      'is_favorite': isFavorite,
+      'unit': unit.toJson(),
+      'images': images,
+      'main_image': mainImage,
+      'created_at': createdAt,
+    };
   }
 }
 
@@ -172,11 +152,53 @@ class Unit {
     }
 
     return Unit(
-      id: json['id'] as int? ?? 0,
+      id: (json['id'] as num?)?.toInt() ?? 0,
       name: name,
       type: type,
       createdAt: json['created_at'] as String? ?? '',
       updatedAt: json['updated_at'] as String? ?? '',
     );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'name': name,
+      'type': type,
+      'created_at': createdAt,
+      'updated_at': updatedAt,
+    };
+  }
+}
+
+/// ✅ Response Class (للـ HomeTab أو FavoriteTab)
+class ProductResponse {
+  final List<Product> data;
+  final String status;
+  final String message;
+
+  ProductResponse({
+    this.data = const [],
+    this.status = 'success',
+    this.message = '',
+  });
+
+  factory ProductResponse.fromJson(Map<String, dynamic> json) {
+    return ProductResponse(
+      data: (json['data'] as List<dynamic>?)
+          ?.map((item) => Product.fromJson(item as Map<String, dynamic>))
+          .toList() ??
+          [],
+      status: json['status'] as String? ?? 'success',
+      message: json['message'] as String? ?? '',
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'data': data.map((e) => e.toJson()).toList(),
+      'status': status,
+      'message': message,
+    };
   }
 }

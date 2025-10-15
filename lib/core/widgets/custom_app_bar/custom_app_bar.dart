@@ -27,26 +27,13 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
           color: AppThemes.greenColor.color,
         ),
       ),
-      actions: [
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 8.0),
-          child: Container(
-            decoration: BoxDecoration(
-              color: AppThemes.lightLightGrey.color,
-              borderRadius: BorderRadius.circular(16),
-            ),
-            width: 48,
-            height: 48,
-            child: IconButton(
-              icon: Icon(
-                Icons.arrow_forward_ios,
-                color: AppThemes.greenColor.color,
-              ),
-              onPressed: onBackPressed,
-            ),
-          ),
+      leading: IconButton(
+        icon: Icon(
+          Icons.arrow_back_ios,
+          color: AppThemes.greenColor.color,
         ),
-      ],
+        onPressed: onBackPressed,
+      ),
     );
   }
 

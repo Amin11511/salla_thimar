@@ -5,6 +5,8 @@ import 'package:skydive/features/home/tabs/account_tab/cubit/logout_cubit.dart';
 import 'package:skydive/features/home/tabs/account_tab/cubit/profile_cubit.dart';
 import 'package:skydive/features/home/tabs/account_tab/repo/account_tab_repo.dart';
 import 'package:skydive/features/home/tabs/account_tab/view/account_tab.dart';
+import 'package:skydive/features/home/tabs/favorite_tab/cubit/favorite_tab_cubit.dart';
+import 'package:skydive/features/home/tabs/favorite_tab/repo/favorite_tab_service.dart';
 import 'package:skydive/features/home/tabs/favorite_tab/view/favorite_tab.dart';
 import 'package:skydive/features/home/tabs/home_tab/view/home_tab.dart';
 import 'package:skydive/features/home/tabs/my_orders_tab/view/my_orders_tab.dart';
@@ -36,7 +38,10 @@ class _HomeState extends State<Home> {
     HomeTab(),
     const MyOrdersTab(),
     const NotificationTab(),
-    const FavoriteTab(),
+    BlocProvider(
+      create: (context) => FavoriteTabCubit(FavoriteTabService(ServerGate.i))..fetchFavoriteProducts(),
+      child: const FavoriteTab(),
+    ),
     MultiBlocProvider(
       providers: [
         BlocProvider(

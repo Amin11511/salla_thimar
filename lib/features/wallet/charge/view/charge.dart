@@ -61,16 +61,10 @@ class _ChargeState extends State<Charge> {
           padding: const EdgeInsets.symmetric(horizontal: 16.0),
           child: SingleChildScrollView(
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 SizedBox(height: 60),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    Text(
+                Text(
                       "معلومات المبلغ",
-                      textDirection: TextDirection.rtl,
                       style: TextStyle(
                         fontFamily: "Tajawal",
                         fontSize: 20,
@@ -78,15 +72,11 @@ class _ChargeState extends State<Charge> {
                         color: AppThemes.greenColor.color,
                       ),
                     ),
-                  ],
-                ),
+                SizedBox(height: 10),
                 AppField(hintText: "المبلغ الخاص بك", controller: amountController),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    Text(
+                SizedBox(height: 10),
+                Text(
                       "معلومات البطاقة",
-                      textDirection: TextDirection.rtl,
                       style: TextStyle(
                         fontFamily: "Tajawal",
                         fontSize: 20,
@@ -94,10 +84,11 @@ class _ChargeState extends State<Charge> {
                         color: AppThemes.greenColor.color,
                       ),
                     ),
-                  ],
-                ),
+                SizedBox(height: 10),
                 AppField(hintText: "الاسم", controller: nameController),
+                SizedBox(height: 10),
                 AppField(hintText: "رقم البطاقة اللإتمانية", controller: cardNumberController),
+                SizedBox(height: 10),
                 Row(
                   children: [
                     Expanded(child: AppField(hintText: "رقم المتسلسل", controller: cvvController)),
@@ -105,8 +96,9 @@ class _ChargeState extends State<Charge> {
                     Expanded(child: AppField(hintText: "تاريخ الإنتهاء", controller: expiryDateController)),
                   ],
                 ),
+                SizedBox(height: 10),
                 AppField(hintText: "رقم العملية (Transaction ID)", controller: transactionIdController),
-                SizedBox(height: MediaQuery.of(context).size.height * 0.25),
+                SizedBox(height: MediaQuery.of(context).size.height * 0.05),
                 AppBtn(
                   title: "دفع",
                   backgroundColor: AppThemes.greenColor.color,

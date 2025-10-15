@@ -24,26 +24,17 @@ class AddressCard extends StatelessWidget {
             padding: const EdgeInsets.only(top: 8.0, left: 8, right: 8),
             child: Row(
               children: [
-                GestureDetector(
-                  onTap: () {
-                    Navigator.pushNamed(
-                      context,
-                      NamedRoutes.editAddress,
-                      arguments: address,
-                    );
-                  },
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: AppThemes.lightRed.color,
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: const Padding(
-                      padding: EdgeInsets.all(8.0),
-                      child: Icon(Icons.edit, color: Colors.red),
-                    ),
+                Text(
+                  address.type == 'home' ? 'المنزل' : 'العمل',
+                  textDirection: TextDirection.rtl,
+                  style: TextStyle(
+                    fontFamily: "Tajawal",
+                    fontWeight: FontWeight.bold,
+                    fontSize: 18,
+                    color: AppThemes.greenColor.color,
                   ),
                 ),
-                const SizedBox(width: 10),
+                const Spacer(),
                 GestureDetector(
                   onTap: () {
                     showDialog(
@@ -78,15 +69,24 @@ class AddressCard extends StatelessWidget {
                     ),
                   ),
                 ),
-                const Spacer(),
-                Text(
-                  address.type == 'home' ? 'المنزل' : 'العمل',
-                  textDirection: TextDirection.rtl,
-                  style: TextStyle(
-                    fontFamily: "Tajawal",
-                    fontWeight: FontWeight.bold,
-                    fontSize: 18,
-                    color: AppThemes.greenColor.color,
+                const SizedBox(width: 10),
+                GestureDetector(
+                  onTap: () {
+                    Navigator.pushNamed(
+                      context,
+                      NamedRoutes.editAddress,
+                      arguments: address,
+                    );
+                  },
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: AppThemes.lightRed.color,
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: const Padding(
+                      padding: EdgeInsets.all(8.0),
+                      child: Icon(Icons.edit, color: Colors.red),
+                    ),
                   ),
                 ),
               ],
@@ -95,8 +95,17 @@ class AddressCard extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.end,
               children: [
+                Text(
+                  "العنوان: ",
+                  textDirection: TextDirection.rtl,
+                  style: TextStyle(
+                    fontFamily: "Tajawal",
+                    fontWeight: FontWeight.bold,
+                    fontSize: 18,
+                    color: AppThemes.lightGrey.color,
+                  ),
+                ),
                 Expanded(
                   child: Text(
                     address.location,
@@ -109,8 +118,15 @@ class AddressCard extends StatelessWidget {
                     ),
                   ),
                 ),
+              ],
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+            child: Row(
+              children: [
                 Text(
-                  "العنوان: ",
+                  "الوصف: ",
                   textDirection: TextDirection.rtl,
                   style: TextStyle(
                     fontFamily: "Tajawal",
@@ -119,14 +135,6 @@ class AddressCard extends StatelessWidget {
                     color: AppThemes.lightGrey.color,
                   ),
                 ),
-              ],
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
                 Expanded(
                   child: Text(
                     address.description,
@@ -139,34 +147,13 @@ class AddressCard extends StatelessWidget {
                     ),
                   ),
                 ),
-                Text(
-                  "الوصف: ",
-                  textDirection: TextDirection.rtl,
-                  style: TextStyle(
-                    fontFamily: "Tajawal",
-                    fontWeight: FontWeight.bold,
-                    fontSize: 18,
-                    color: AppThemes.lightGrey.color,
-                  ),
-                ),
               ],
             ),
           ),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                Text(
-                  address.phone,
-                  textDirection: TextDirection.rtl,
-                  style: TextStyle(
-                    fontFamily: "Tajawal",
-                    fontWeight: FontWeight.bold,
-                    fontSize: 18,
-                    color: AppThemes.greenColor.color,
-                  ),
-                ),
                 Text(
                   "رقم الجوال: ",
                   textDirection: TextDirection.rtl,
@@ -177,6 +164,16 @@ class AddressCard extends StatelessWidget {
                     color: AppThemes.lightGrey.color,
                   ),
                 ),
+                Text(
+                  address.phone,
+                  textDirection: TextDirection.rtl,
+                  style: TextStyle(
+                    fontFamily: "Tajawal",
+                    fontWeight: FontWeight.bold,
+                    fontSize: 18,
+                    color: AppThemes.greenColor.color,
+                  ),
+                ),
               ],
             ),
           ),
@@ -184,17 +181,7 @@ class AddressCard extends StatelessWidget {
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.end,
                 children: [
-                  Text(
-                    "افتراضي",
-                    style: TextStyle(
-                      fontFamily: "Tajawal",
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16,
-                      color: AppThemes.greenColor.color,
-                    ),
-                  ),
                   Text(
                     "الحالة: ",
                     textDirection: TextDirection.rtl,
@@ -203,6 +190,15 @@ class AddressCard extends StatelessWidget {
                       fontWeight: FontWeight.bold,
                       fontSize: 16,
                       color: AppThemes.lightGrey.color,
+                    ),
+                  ),
+                  Text(
+                    "افتراضي",
+                    style: TextStyle(
+                      fontFamily: "Tajawal",
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16,
+                      color: AppThemes.greenColor.color,
                     ),
                   ),
                 ],

@@ -1,7 +1,12 @@
 import 'package:dio/dio.dart';
 import '../../../core/services/server_gate.dart';
+import '../../../models/user_model.dart';
 
 class UpdateProfileService {
+  final ServerGate _serverGate;
+
+  UpdateProfileService(this._serverGate);
+
   Future<Map<String, dynamic>> updateProfile({
     required String fullname,
     required String phone,
@@ -10,6 +15,11 @@ class UpdateProfileService {
     String? passwordConfirmation,
     String? imagePath,
   }) async {
+    final token = UserModel.i.token;
+    if (token == null || token.isEmpty) {
+      throw Exception('التوكن غير موجود. يرجى تسجيل الدخول مرة أخرى.');
+    }
+
     final formData = <String, dynamic>{
       'fullname': fullname,
       'phone': phone,
@@ -26,6 +36,9 @@ class UpdateProfileService {
     final response = await ServerGate.i.sendToServer(
       url: 'client/profile',
       formData: formData,
+      headers: {
+        'Authorization': 'Bearer $token',
+      },
     );
 
     if (response.success) {

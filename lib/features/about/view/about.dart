@@ -13,6 +13,9 @@ class About extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<AboutCubit>().fetchAbout();
+    });
     return Scaffold(
       appBar: CustomAppBar(
         title: "عن التطبيق",
