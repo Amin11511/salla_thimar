@@ -2,6 +2,7 @@ import 'package:country_code_picker/country_code_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:skydive/core/routes/app_routes_fun.dart';
 import 'package:skydive/core/routes/routes.dart';
 import 'package:skydive/core/utils/app_theme.dart';
 import 'package:skydive/core/utils/extensions.dart';
@@ -157,10 +158,9 @@ class _ForgetPasswordState extends State<ForgetPassword> {
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   SnackBar(content: Text(state.message)),
                                 );
-                                Navigator.pushNamed(
-                                  context,
+                                push(
                                   NamedRoutes.confirmPhone,
-                                  arguments: {
+                                  arg: {
                                     'phoneNumber': '$_selectedCountryCode${_phoneController.text}',
                                     'countryCode': _selectedCountryCode,
                                   },
@@ -202,7 +202,7 @@ class _ForgetPasswordState extends State<ForgetPassword> {
                       children: [
                         GestureDetector(
                           onTap: () {
-                            Navigator.pushNamed(context, NamedRoutes.login);
+                            push(NamedRoutes.login);
                           },
                           child: Row(
                             children: [

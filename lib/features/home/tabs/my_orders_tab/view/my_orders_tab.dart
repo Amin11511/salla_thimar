@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:skydive/core/routes/app_routes_fun.dart';
 import 'package:skydive/core/routes/routes.dart';
 import 'package:skydive/core/utils/app_theme.dart';
 import 'package:skydive/core/utils/extensions.dart';
@@ -151,10 +152,9 @@ class _MyOrdersTabState extends State<MyOrdersTab> {
                         final order = orders[index];
                         return GestureDetector(
                           onTap: () {
-                            Navigator.pushNamed(
-                              context,
+                            push(
                               NamedRoutes.orderDetails,
-                              arguments: {'orderId': order.id},
+                              arg: {'orderId': order.id},
                             );
                           },
                           child: OrderItem(

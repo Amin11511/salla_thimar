@@ -1,6 +1,7 @@
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:skydive/core/routes/app_routes_fun.dart';
 import 'package:skydive/core/utils/extensions.dart';
 
 import '../../../../core/routes/routes.dart';
@@ -41,7 +42,7 @@ class _WalletState extends State<Wallet> {
         appBar: CustomAppBar(
           title: "المحفظة",
           onBackPressed: () {
-            Navigator.pop(context);
+            pushBack();
           },
         ),
         body: Padding(
@@ -125,7 +126,7 @@ class _WalletState extends State<Wallet> {
                     dashPattern: const [6, 3],
                     child: ElevatedButton(
                       onPressed: () {
-                        Navigator.pushNamed(context, NamedRoutes.charge);
+                        push(NamedRoutes.charge);
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: AppThemes.whiteColor.color,
@@ -157,7 +158,7 @@ class _WalletState extends State<Wallet> {
                   children: [
                     GestureDetector(
                       onTap: () {
-                        Navigator.pushNamed(context, NamedRoutes.transaction);
+                        push(NamedRoutes.transaction);
                       },
                       child: Text(
                         "عرض الكل",

@@ -5,6 +5,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:logger/logger.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:skydive/core/routes/app_routes_fun.dart';
 import 'package:skydive/core/routes/routes.dart';
 import 'package:skydive/core/utils/app_theme.dart';
 import 'package:skydive/core/utils/extensions.dart';
@@ -54,14 +55,14 @@ class _RegisterState extends State<Register> {
         actions: [
           TextButton(
             onPressed: () {
-              Navigator.pop(context);
+              pushBack();
               context.read<RegisterCubit>().setDefaultLocation();
             },
             child: const Text("إلغاء"),
           ),
           TextButton(
             onPressed: () {
-              Navigator.pop(context);
+              pushBack();
               context.read<RegisterCubit>().checkLocationPermission();
             },
             child: const Text("السماح"),
@@ -82,14 +83,14 @@ class _RegisterState extends State<Register> {
         actions: [
           TextButton(
             onPressed: () {
-              Navigator.pop(context);
+              pushBack();
               context.read<RegisterCubit>().setDefaultLocation();
             },
             child: const Text("إلغاء"),
           ),
           TextButton(
             onPressed: () {
-              Navigator.pop(context);
+              pushBack();
               context.read<RegisterCubit>().checkLocationPermission();
             },
             child: const Text("إعادة المحاولة"),
@@ -110,14 +111,14 @@ class _RegisterState extends State<Register> {
         actions: [
           TextButton(
             onPressed: () {
-              Navigator.pop(context);
+              pushBack();
               context.read<RegisterCubit>().setDefaultLocation();
             },
             child: const Text("إلغاء"),
           ),
           TextButton(
             onPressed: () {
-              Navigator.pop(context);
+              pushBack();
               openAppSettings();
             },
             child: const Text("فتح الإعدادات"),
@@ -138,14 +139,14 @@ class _RegisterState extends State<Register> {
         actions: [
           TextButton(
             onPressed: () {
-              Navigator.pop(context);
+              pushBack();
               context.read<RegisterCubit>().setDefaultLocation();
             },
             child: const Text("إلغاء"),
           ),
           TextButton(
             onPressed: () {
-              Navigator.pop(context);
+              pushBack();
               Geolocator.openLocationSettings();
             },
             child: const Text("فتح إعدادات الموقع"),
@@ -166,14 +167,14 @@ class _RegisterState extends State<Register> {
         actions: [
           TextButton(
             onPressed: () {
-              Navigator.pop(context);
+              pushBack();
               context.read<RegisterCubit>().setDefaultLocation();
             },
             child: const Text("إلغاء"),
           ),
           TextButton(
             onPressed: () {
-              Navigator.pop(context);
+              pushBack();
               context.read<RegisterCubit>().checkLocationPermission();
             },
             child: const Text("إعادة المحاولة"),
@@ -197,12 +198,11 @@ class _RegisterState extends State<Register> {
             );
             _logger.d("Navigating to VerifyPhone screen");
             final cleanCountryCode = _selectedCountryCode?.replaceAll('+', '') ?? '966';
-            final phoneNumber = _phoneController.text; // استخدام رقم الهاتف بدون رمز الدولة
-            Navigator.pushNamed(
-              context,
+            final phoneNumber = _phoneController.text;
+            push(
               NamedRoutes.verifyPhone,
-              arguments: {
-                'phoneNumber': phoneNumber, // تمرير رقم الهاتف بدون رمز الدولة
+              arg: {
+                'phoneNumber': phoneNumber,
                 'countryCode': _selectedCountryCode,
                 'initialDevMessage': state.devMessage,
               },
@@ -498,7 +498,7 @@ class _RegisterState extends State<Register> {
                         ),
                         GestureDetector(
                           onTap: () {
-                            Navigator.pushNamed(context, NamedRoutes.login);
+                            push(NamedRoutes.login);
                           },
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,

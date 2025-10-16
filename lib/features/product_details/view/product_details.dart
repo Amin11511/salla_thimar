@@ -2,6 +2,7 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:skydive/core/routes/app_routes_fun.dart';
 import 'package:skydive/core/utils/extensions.dart';
 import '../../../core/utils/app_theme.dart';
 import '../../../core/widgets/product_details/product_image_carousel.dart';
@@ -76,7 +77,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                     color: AppThemes.greenColor.color,
                   ),
                   onPressed: () {
-                    Navigator.pop(context);
+                    pushBack();
                   },
                 ),
                 actions: [

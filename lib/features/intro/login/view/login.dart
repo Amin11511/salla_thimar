@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:logger/logger.dart';
+import 'package:skydive/core/routes/app_routes_fun.dart';
 import 'package:skydive/core/routes/routes.dart';
 import 'package:skydive/core/utils/extensions.dart';
 import 'package:skydive/core/widgets/app_btn.dart';
@@ -185,7 +186,7 @@ class _LoginState extends State<Login> {
                       children: [
                         GestureDetector(
                           onTap: () {
-                            Navigator.pushNamed(context, NamedRoutes.forgetPassword);
+                            push(NamedRoutes.forgetPassword);
                           },
                           child: Text(
                             "هل نسيت كلمة المرور؟",
@@ -213,10 +214,7 @@ class _LoginState extends State<Login> {
                                     duration: Duration(seconds: 2),
                                   ),
                                 );
-                                Navigator.pushReplacementNamed(
-                                  context,
-                                  NamedRoutes.home,
-                                );
+                                replacement(NamedRoutes.home);
                               } else if (state is LoginError) {
                                 _logger.e('LoginError: ${state.message}');
                                 ScaffoldMessenger.of(context).showSnackBar(
@@ -258,7 +256,7 @@ class _LoginState extends State<Login> {
                       children: [
                         GestureDetector(
                           onTap: () {
-                            Navigator.pushNamed(context, NamedRoutes.register);
+                            push(NamedRoutes.register);
                           },
                           child: Row(
                             children: [

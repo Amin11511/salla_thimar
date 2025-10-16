@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:skydive/core/routes/app_routes_fun.dart';
 import 'package:skydive/core/utils/extensions.dart';
 import '../../../../../core/routes/routes.dart';
 import '../../../../../core/services/server_gate.dart';
@@ -79,10 +80,9 @@ class _FavoriteTabState extends State<FavoriteTab> {
                   create: (context) => CartCubit(CartService(ServerGate.i)),
                   child: GestureDetector(
                     onTap: () {
-                      Navigator.pushNamed(
-                        context,
+                      push(
                         NamedRoutes.productDetails,
-                        arguments: {'productId': product.id},
+                        arg: {'productId': product.id},
                       );
                     },
                     child: BuildProductCard(

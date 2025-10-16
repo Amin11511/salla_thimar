@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:logger/logger.dart';
+import 'package:skydive/core/routes/app_routes_fun.dart';
 import 'package:skydive/core/utils/extensions.dart';
 import '../../../../../core/routes/routes.dart';
 import '../../../../../core/utils/app_theme.dart';
@@ -36,7 +37,7 @@ class _AccountTabState extends State<AccountTab> {
           if (state is LogoutSuccess) {
             _logger.i('AccountTab: Logout successful, navigating to login...');
             // Navigate to login screen after successful logout
-            Navigator.pushReplacementNamed(context, NamedRoutes.login);
+            replacement(NamedRoutes.login);
           } else if (state is LogoutError) {
             _logger.e('AccountTab: Logout error = ${state.message}');
             // Show error message
@@ -143,7 +144,7 @@ class _AccountTabState extends State<AccountTab> {
                             title: "البيانات الشخصية",
                             iconPath: Assets.images.profileIc.path,
                             onTab: () {
-                              Navigator.pushNamed(context, NamedRoutes.updateProfile);
+                              push(NamedRoutes.updateProfile);
                             },
                           ),
                           //wallet
@@ -151,7 +152,7 @@ class _AccountTabState extends State<AccountTab> {
                             title: "المحفظة",
                             iconPath: Assets.images.wallet.path,
                             onTab: () {
-                              Navigator.pushNamed(context, NamedRoutes.wallet);
+                              push(NamedRoutes.wallet);
                             },
                           ),
                           //Addresses
@@ -159,7 +160,7 @@ class _AccountTabState extends State<AccountTab> {
                             title: "العناوين",
                             iconPath: Assets.images.address.path,
                             onTab: () {
-                              Navigator.pushNamed(context, NamedRoutes.address);
+                              push(NamedRoutes.address);
                             },
                           ),
                           //payment
@@ -167,7 +168,7 @@ class _AccountTabState extends State<AccountTab> {
                             title: "الدفع",
                             iconPath: Assets.images.pay.path,
                             onTab: () {
-                              Navigator.pushNamed(context, NamedRoutes.payment);
+                              push(NamedRoutes.payment);
                             },
                           ),
                           //FAQs
@@ -175,7 +176,7 @@ class _AccountTabState extends State<AccountTab> {
                             title: "أسئلة متكررة",
                             iconPath: Assets.images.question.path,
                             onTab: () {
-                              Navigator.pushNamed(context, NamedRoutes.faqs);
+                              push(NamedRoutes.faqs);
                             },
                           ),
                           //Policy
@@ -183,7 +184,7 @@ class _AccountTabState extends State<AccountTab> {
                             title: "سياسة الخصوصية",
                             iconPath: Assets.images.check.path,
                             onTab: () {
-                              Navigator.pushNamed(context, NamedRoutes.policy);
+                              push(NamedRoutes.policy);
                             },
                           ),
                           //contact us
@@ -191,7 +192,7 @@ class _AccountTabState extends State<AccountTab> {
                             title: "تواصل معنا",
                             iconPath: Assets.images.call.path,
                             onTab: () {
-                              Navigator.pushNamed(context, NamedRoutes.contact);
+                              push(NamedRoutes.contact);
                             },
                           ),
                           // sug & comp
@@ -199,7 +200,7 @@ class _AccountTabState extends State<AccountTab> {
                             title: "الشكاوي والأقتراحات",
                             iconPath: Assets.images.info.path,
                             onTab: () {
-                              Navigator.pushNamed(context, NamedRoutes.sugAndComp);
+                              push(NamedRoutes.sugAndComp);
                             },
                           ),
                           //share app
@@ -213,7 +214,7 @@ class _AccountTabState extends State<AccountTab> {
                             title: "عن التطبيق",
                             iconPath: Assets.images.info.path,
                             onTab: () {
-                              Navigator.pushNamed(context, NamedRoutes.about);
+                              push(NamedRoutes.about);
                             },
                           ),
                           //change language
@@ -244,7 +245,7 @@ class _AccountTabState extends State<AccountTab> {
                                   context.read<LogoutCubit>().logout();
                                 },
                                 onCancel: () {
-                                  Navigator.of(context).pop();
+                                  pushBack();
                                 },
                               );
                             },

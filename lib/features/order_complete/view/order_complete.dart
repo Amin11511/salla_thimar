@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:skydive/core/routes/app_routes_fun.dart';
 import 'package:skydive/core/services/server_gate.dart';
 import 'package:skydive/core/utils/extensions.dart';
 import '../../../core/routes/routes.dart';
@@ -409,7 +410,7 @@ class _OrderCompleteState extends State<OrderComplete> {
           appBar: CustomAppBar(
             title: "إتمام الطلب",
             onBackPressed: () {
-              Navigator.pop(context);
+              pushBack();
             },
           ),
           body: SafeArea(
@@ -483,7 +484,7 @@ class _OrderCompleteState extends State<OrderComplete> {
                         const Spacer(),
                         GestureDetector(
                           onTap: () {
-                            Navigator.pushNamed(context, NamedRoutes.addAddress).then((_) {
+                            push(NamedRoutes.addAddress).then((_) {
                               addressesCubit.fetchAddresses();
                             });
                           },

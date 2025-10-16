@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:skydive/core/routes/app_routes_fun.dart';
 import 'package:skydive/core/utils/extensions.dart';
 import '../../../core/services/server_gate.dart';
 import '../../../core/utils/app_theme.dart';
@@ -31,7 +32,7 @@ class Contact extends StatelessWidget {
             title: "تواصل معنا",
             onBackPressed: () {
               print('Back pressed from Contact screen');
-              Navigator.pop(context);
+              pushBack();
             },
           ),
           body: BlocConsumer<ContactCubit, ContactState>(

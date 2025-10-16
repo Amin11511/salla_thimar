@@ -1,6 +1,7 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:skydive/core/routes/app_routes_fun.dart';
 import 'package:skydive/core/services/server_gate.dart';
 import 'package:skydive/core/utils/extensions.dart';
 import 'package:skydive/features/cart/repo/cart_service.dart';
@@ -325,7 +326,7 @@ class _HomeTabState extends State<HomeTab> {
                                   }
                                   return GestureDetector(
                                     onTap: () {
-                                      Navigator.pushNamed(context, NamedRoutes.cart);
+                                      push(NamedRoutes.cart);
                                     },
                                     child: Align(
                                       alignment: Alignment.centerLeft,
@@ -536,10 +537,9 @@ class _HomeTabState extends State<HomeTab> {
                                   title: category.name,
                                   containerColor: containerColor,
                                   onTap: () {
-                                    Navigator.pushNamed(
-                                      context,
+                                    push(
                                       NamedRoutes.categoryProduct,
-                                      arguments: {
+                                      arg: {
                                         'categoryId': category.id,
                                         'categoryName': category.name,
                                       },
@@ -586,10 +586,9 @@ class _HomeTabState extends State<HomeTab> {
                               final product = _combinedState.products![index];
                               return GestureDetector(
                                 onTap: () {
-                                  Navigator.pushNamed(
-                                    context,
+                                  push(
                                     NamedRoutes.productDetails,
-                                    arguments: {'productId': product.id},
+                                    arg: {'productId': product.id},
                                   );
                                 },
                                 child: BuildProductCard(

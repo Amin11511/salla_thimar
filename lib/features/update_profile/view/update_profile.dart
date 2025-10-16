@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:skydive/core/routes/app_routes_fun.dart';
 import 'package:skydive/core/utils/extensions.dart';
 import '../../../core/utils/app_theme.dart';
 import '../../../core/widgets/app_btn.dart';
@@ -112,7 +113,7 @@ class _UpdateProfileState extends State<UpdateProfile> {
         actions: [
           ElevatedButton(
             onPressed: () {
-              Navigator.pop(context);
+              pushBack();
             },
             style: ElevatedButton.styleFrom(
               backgroundColor: Colors.white,
@@ -131,7 +132,7 @@ class _UpdateProfileState extends State<UpdateProfile> {
           ),
           ElevatedButton(
             onPressed: () {
-              Navigator.pop(context);
+              pushBack();
               _showPasswordConfirmationDialog(context);
             },
             style: ElevatedButton.styleFrom(
@@ -191,7 +192,7 @@ class _UpdateProfileState extends State<UpdateProfile> {
           actions: [
             TextButton(
               onPressed: () {
-                Navigator.pop(newContext);
+                pushBack();
               },
               style: TextButton.styleFrom(
                 foregroundColor: AppThemes.greenColor.color,
@@ -218,7 +219,7 @@ class _UpdateProfileState extends State<UpdateProfile> {
                     passwordConfirmation: _passwordConfirmationController.text.isNotEmpty ? _passwordConfirmationController.text : null,
                     imagePath: _imagePath,
                   );
-                  Navigator.pop(newContext);
+                  pushBack();
                 }
               },
               style: ElevatedButton.styleFrom(
@@ -248,7 +249,7 @@ class _UpdateProfileState extends State<UpdateProfile> {
       appBar: CustomAppBar(
         title: "البيانات الشخصية",
         onBackPressed: () {
-          Navigator.pop(context);
+          pushBack();
         },
       ),
       body: SafeArea(
@@ -267,7 +268,7 @@ class _UpdateProfileState extends State<UpdateProfile> {
                     backgroundColor: AppThemes.greenColor.color,
                   ),
                 );
-                Navigator.pop(context);
+                pushBack();
               } else if (state is UpdateProfileError) {
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(

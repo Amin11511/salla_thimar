@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:skydive/core/routes/app_routes_fun.dart';
 import 'package:skydive/core/utils/extensions.dart';
 import '../../../core/routes/routes.dart';
 import '../../../core/utils/app_theme.dart';
@@ -42,7 +43,7 @@ class _CartState extends State<Cart> {
       appBar: CustomAppBar(
         title: "السلة",
         onBackPressed: () {
-          Navigator.pop(context);
+          pushBack();
         },
       ),
       body: SafeArea(
@@ -147,10 +148,10 @@ class _CartState extends State<Cart> {
                                   message: 'تأكيد حذف الصنف من السلة؟',
                                   onConfirm: () {
                                     context.read<CartCubit>().deleteFromCart(item.id);
-                                    Navigator.of(context).pop();
+                                    pushBack();
                                   },
                                   onCancel: () {
-                                    Navigator.of(context).pop();
+                                    pushBack();
                                   },
                                 );
                               },
@@ -353,10 +354,9 @@ class _CartState extends State<Cart> {
                                 width: double.infinity,
                                 child: ElevatedButton(
                                   onPressed: () {
-                                    Navigator.pushNamed(
-                                      context,
+                                    push(
                                       NamedRoutes.orderComplete,
-                                      arguments: {
+                                      arg: {
                                         'total': total,
                                         'discount': discount,
                                         'cartItems': cartData,

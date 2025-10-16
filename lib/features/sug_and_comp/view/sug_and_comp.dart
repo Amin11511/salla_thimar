@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:skydive/core/routes/app_routes_fun.dart';
 import 'package:skydive/core/utils/extensions.dart';
 import 'package:skydive/core/widgets/app_btn.dart';
 import '../../../core/utils/app_theme.dart';
@@ -25,7 +26,7 @@ class SugAndComp extends StatelessWidget {
           title: "الشكاوي والإقتراحات",
           onBackPressed: () {
             print('Back pressed from SugAndComp screen');
-            Navigator.pop(context);
+            pushBack();
           },
         ),
         body: BlocConsumer<SugAndCompCubit, SugAndCompState>(

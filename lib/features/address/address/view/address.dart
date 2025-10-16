@@ -1,6 +1,7 @@
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:skydive/core/routes/app_routes_fun.dart';
 import 'package:skydive/core/utils/extensions.dart';
 import '../../../../core/routes/routes.dart';
 import '../../../../core/utils/app_theme.dart';
@@ -22,7 +23,7 @@ class Address extends StatelessWidget {
       appBar: CustomAppBar(
         title: "العناوين",
         onBackPressed: () {
-          Navigator.pop(context);
+          pushBack();
         },
       ),
       body: Padding(
@@ -70,7 +71,7 @@ class Address extends StatelessWidget {
                     dashPattern: const [6, 3],
                     child: ElevatedButton(
                       onPressed: () {
-                        Navigator.pushNamed(context, NamedRoutes.addAddress);
+                        push(NamedRoutes.addAddress);
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: AppThemes.whiteColor.color,
@@ -123,10 +124,9 @@ class Address extends StatelessWidget {
                               child: ElevatedButton(
                                 onPressed: () async {
                                   final currentCubit = context.read<CurrentAddressesCubit>();
-                                  final result = await Navigator.pushNamed(
-                                    context,
+                                  final result = await push(
                                     NamedRoutes.addAddress,
-                                    arguments: currentCubit,
+                                    arg: currentCubit,
                                   );
                                   if (result == true) {
                                     currentCubit.fetchAddresses();

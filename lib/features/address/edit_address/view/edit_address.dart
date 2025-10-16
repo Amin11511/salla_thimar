@@ -4,6 +4,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:logger/logger.dart';
+import 'package:skydive/core/routes/app_routes_fun.dart';
 import 'package:skydive/core/utils/extensions.dart';
 import '../../../../core/utils/app_theme.dart';
 import '../../../../core/widgets/app_btn.dart';
@@ -117,13 +118,13 @@ class _EditAddressState extends State<EditAddress> {
         actions: [
           TextButton(
             onPressed: () {
-              Navigator.pop(context);
+              pushBack();
             },
             child: const Text("إلغاء"),
           ),
           TextButton(
             onPressed: () async {
-              Navigator.pop(context);
+              pushBack();
               var status = await Permission.location.request();
               if (status.isGranted) {
                 _logger.d("Location permission granted");
@@ -152,13 +153,13 @@ class _EditAddressState extends State<EditAddress> {
         actions: [
           TextButton(
             onPressed: () {
-              Navigator.pop(context);
+              pushBack();
             },
             child: const Text("إلغاء"),
           ),
           TextButton(
             onPressed: () {
-              Navigator.pop(context);
+              pushBack();
               _checkLocationPermission();
             },
             child: const Text("إعادة المحاولة"),
@@ -177,14 +178,14 @@ class _EditAddressState extends State<EditAddress> {
         actions: [
           TextButton(
             onPressed: () {
-              Navigator.pop(context);
+              pushBack();
             },
             child: const Text("إلغاء"),
           ),
           TextButton(
             onPressed: () {
               openAppSettings();
-              Navigator.pop(context);
+              pushBack();
             },
             child: const Text("فتح الإعدادات"),
           ),
@@ -206,7 +207,7 @@ class _EditAddressState extends State<EditAddress> {
             context,
             "تم تعديل العنوان بنجاح",
           );
-          Navigator.pop(context);
+          pushBack();
         } else if (state is UpdateAddressError) {
           showCustomMessageDialog(
             context,
@@ -219,7 +220,7 @@ class _EditAddressState extends State<EditAddress> {
           appBar: CustomAppBar(
             title: "تعديل العنوان",
             onBackPressed: () {
-              Navigator.pop(context);
+              pushBack();
             },
           ),
           body: SingleChildScrollView(

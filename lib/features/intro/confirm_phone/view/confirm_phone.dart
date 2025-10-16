@@ -5,6 +5,7 @@ import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:skydive/core/utils/app_theme.dart';
 import 'package:skydive/core/utils/extensions.dart';
 import 'package:skydive/core/widgets/app_btn.dart';
+import '../../../../core/routes/app_routes_fun.dart';
 import '../../../../core/routes/routes.dart';
 import '../../../../core/services/server_gate.dart';
 import '../../../../core/widgets/custom_message_dialog.dart';
@@ -74,7 +75,7 @@ class _ConfirmPhoneState extends State<ConfirmPhone> {
                         children: [
                           GestureDetector(
                             onTap: () {
-                              Navigator.pushNamed(context, NamedRoutes.forgetPassword);
+                              push(NamedRoutes.forgetPassword);
                             },
                             child: Text(
                               widget.phoneNumber,
@@ -144,10 +145,9 @@ class _ConfirmPhoneState extends State<ConfirmPhone> {
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(content: Text(state.message)),
                               );
-                              Navigator.pushNamed(
-                                context,
+                              push(
                                 NamedRoutes.confirmPassword,
-                                arguments: {
+                                arg: {
                                   'phone': widget.phoneNumber,
                                   'code': otp,
                                 },
@@ -300,7 +300,7 @@ class _ConfirmPhoneState extends State<ConfirmPhone> {
                     children: [
                       GestureDetector(
                         onTap: () {
-                          Navigator.pushNamed(context, NamedRoutes.login);
+                          push(NamedRoutes.login);
                         },
                         child: Row(
                           children: [

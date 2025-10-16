@@ -1,6 +1,7 @@
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:skydive/core/routes/app_routes_fun.dart';
 import 'package:skydive/core/utils/extensions.dart';
 import 'dart:convert';
 
@@ -70,7 +71,7 @@ class _PaymentState extends State<Payment> {
                 Expanded(
                   child: ElevatedButton(
                     onPressed: () {
-                      Navigator.pop(context);
+                      pushBack();
                       _showCardFormBottomSheet('Visa');
                     },
                     style: ElevatedButton.styleFrom(
@@ -99,7 +100,7 @@ class _PaymentState extends State<Payment> {
                 Expanded(
                   child: ElevatedButton(
                     onPressed: () {
-                      Navigator.pop(context);
+                      pushBack();
                       _showCardFormBottomSheet('MasterCard');
                     },
                     style: ElevatedButton.styleFrom(
@@ -175,7 +176,7 @@ class _PaymentState extends State<Payment> {
       appBar: CustomAppBar(
         title: "الدفع",
         onBackPressed: () {
-          Navigator.pop(context);
+          pushBack();
         },
       ),
       body: Padding(
@@ -483,7 +484,7 @@ class _CardFormBottomSheetState extends State<CardFormBottomSheet> {
                             'validDate': _validDateController.text,
                             'cvv': _cvvController.text,
                           });
-                          Navigator.pop(context);
+                          pushBack();
                         }
                       },
                       child: const Text(

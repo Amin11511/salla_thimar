@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:skydive/core/routes/app_routes_fun.dart';
 import 'package:skydive/core/utils/app_theme.dart';
 import 'package:skydive/core/utils/extensions.dart';
 import '../../../../core/widgets/custom_app_bar/custom_app_bar.dart';
@@ -55,7 +56,7 @@ class _TransactionState extends State<Transaction> {
         appBar: CustomAppBar(
           title: "سجل المعاملات",
           onBackPressed: () {
-            Navigator.pop(context);
+            pushBack();
           },
         ),
         body: Padding(

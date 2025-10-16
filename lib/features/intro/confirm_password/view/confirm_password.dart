@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:skydive/core/routes/app_routes_fun.dart';
 import 'package:skydive/core/utils/app_theme.dart';
 import 'package:skydive/core/utils/extensions.dart';
 import '../../../../core/routes/routes.dart';
@@ -127,7 +128,7 @@ class _ConfirmPasswordState extends State<ConfirmPassword> {
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   SnackBar(content: Text(state.message)),
                                 );
-                                Navigator.pushReplacementNamed(context, NamedRoutes.login);
+                                replacement(NamedRoutes.login);
                               } else if (state is ConfirmPasswordError) {
                                 showCustomMessageDialog(
                                   context,
@@ -168,7 +169,7 @@ class _ConfirmPasswordState extends State<ConfirmPassword> {
                       children: [
                         GestureDetector(
                           onTap: () {
-                            Navigator.pushNamed(context, NamedRoutes.login);
+                            push(NamedRoutes.login);
                           },
                           child: Row(
                             children: [

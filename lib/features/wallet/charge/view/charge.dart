@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:skydive/core/routes/app_routes_fun.dart';
 import 'package:skydive/core/utils/extensions.dart';
 import '../../../../core/routes/routes.dart';
 import '../../../../core/utils/app_theme.dart';
@@ -46,7 +47,7 @@ class _ChargeState extends State<Charge> {
             state.message,
           );
           // النقل إلى AppRoutes.wallet بعد النجاح
-          Navigator.pushReplacementNamed(context, NamedRoutes.wallet);
+          replacement(NamedRoutes.wallet);
         } else if (state is WalletChargeError) {
           showCustomMessageDialog(
             context,
@@ -55,7 +56,7 @@ class _ChargeState extends State<Charge> {
         }
       },
       child: Scaffold(
-        appBar: CustomAppBar(title: "شحن الآن", onBackPressed: () { Navigator.pop(context); }),
+        appBar: CustomAppBar(title: "شحن الآن", onBackPressed: () { pushBack(); }),
         body: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16.0),
           child: SingleChildScrollView(

@@ -2,6 +2,7 @@ import 'package:circular_countdown_timer/circular_countdown_timer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
+import 'package:skydive/core/routes/app_routes_fun.dart';
 import 'package:skydive/core/routes/routes.dart';
 import 'package:skydive/core/utils/app_theme.dart';
 import 'package:skydive/core/utils/extensions.dart';
@@ -88,7 +89,7 @@ class _VerifyPhoneState extends State<VerifyPhone> {
                       const SizedBox(width: 5),
                       GestureDetector(
                         onTap: () {
-                          Navigator.pushNamed(context, NamedRoutes.register);
+                          push(NamedRoutes.register);
                         },
                         child: Text(
                           "تغيير رقم الجوال",
@@ -143,7 +144,7 @@ class _VerifyPhoneState extends State<VerifyPhone> {
                                   duration: const Duration(seconds: 2),
                                 ),
                               );
-                              Navigator.pushReplacementNamed(context, NamedRoutes.login);
+                              replacement(NamedRoutes.login);
                             } else if (state is VerifyPhoneResendSuccess) {
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(
@@ -293,7 +294,7 @@ class _VerifyPhoneState extends State<VerifyPhone> {
                     children: [
                       GestureDetector(
                         onTap: () {
-                          Navigator.pushNamed(context, NamedRoutes.login);
+                          push(NamedRoutes.login);
                         },
                         child: Row(
                           children: [

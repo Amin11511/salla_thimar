@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:skydive/core/routes/app_routes_fun.dart';
 import 'package:skydive/core/utils/extensions.dart';
 import '../../../core/utils/app_theme.dart';
 import '../../../core/widgets/custom_app_bar/custom_app_bar.dart';
@@ -18,7 +19,7 @@ class Faqs extends StatelessWidget {
       appBar: CustomAppBar(
         title: "الأسئلة المتكررة",
         onBackPressed: () {
-          Navigator.pop(context);
+          pushBack();
         },
       ),
       body: BlocBuilder<FaqsCubit, FaqsState>(

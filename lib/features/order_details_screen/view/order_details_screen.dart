@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:skydive/core/routes/app_routes_fun.dart';
 import 'package:skydive/core/utils/extensions.dart';
 import '../../../../core/widgets/custom_message_dialog.dart';
 import '../../../core/utils/app_theme.dart';
@@ -33,7 +34,7 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
       appBar: CustomAppBar(
         title: "تفاصيل الطلب",
         onBackPressed: () {
-          Navigator.pop(context);
+          pushBack();
         },
       ),
       body: BlocConsumer<OrderDetailsCubit, OrderDetailsState>(
@@ -44,7 +45,7 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
               state.message,
               autoDismissDuration: const Duration(seconds: 2),
             );
-            Navigator.pop(context); // العودة بعد الإلغاء
+            pushBack();
           } else if (state is OrderCancelError) {
             showCustomMessageDialog(
               context,
