@@ -1,4 +1,4 @@
-# skydive
+# Sallat Thimar
 
 A new Flutter project.
 
