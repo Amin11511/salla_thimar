@@ -8,7 +8,7 @@
     <uses-permission android:name="android.permission.READ_MEDIA_IMAGES"/>
     <application
         android:name="${applicationName}"
-        android:label="skydive"
+        android:label="سلة ثمار"
         android:icon="@mipmap/ic_launcher"
         android:enableOnBackInvokedCallback="true">
 
