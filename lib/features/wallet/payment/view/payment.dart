@@ -45,6 +45,7 @@ class _PaymentState extends State<Payment> {
   void _showCardTypeBottomSheet() {
     showModalBottomSheet(
       context: context,
+      backgroundColor: AppThemes.whiteColor.color,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
       ),
@@ -298,202 +299,207 @@ class _CardFormBottomSheetState extends State<CardFormBottomSheet> {
         bottom: MediaQuery.of(context).viewInsets.bottom,
       ),
       child: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Form(
-            key: _formKey,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Center(
-                  child: Text(
-                    "إضافة بيانات ${widget.cardType}",
-                    textDirection: TextDirection.rtl,
-                    style: TextStyle(
-                      fontFamily: "Tajawal",
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                      color: AppThemes.greenColor.color,
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 20),
-                // 🟢 اسم حامل البطاقة
-                Directionality(
-                  textDirection: TextDirection.rtl,
-                  child: TextFormField(
-                    controller: _nameController,
-                    decoration: InputDecoration(
-                      labelText: "اسم حامل البطاقة",
-                      floatingLabelStyle: TextStyle(
-                        color: AppThemes.greenColor.color,
-                        fontWeight: FontWeight.bold,
-                      ),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(16),
-                        borderSide: BorderSide(color: AppThemes.lightGrey.color, width: 1.5),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(16),
-                        borderSide: BorderSide(color: AppThemes.greenColor.color, width: 2),
-                      ),
-                    ),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'يرجى إدخال اسم حامل البطاقة';
-                      }
-                      return null;
-                    },
-                  ),
-                ),
-                const SizedBox(height: 12),
-                // 🟢 رقم البطاقة
-                Directionality(
-                  textDirection: TextDirection.rtl,
-                  child: TextFormField(
-                    controller: _cardNumberController,
-                    keyboardType: TextInputType.number,
-                    decoration: InputDecoration(
-                      labelText: "رقم البطاقة",
-                      floatingLabelStyle: TextStyle(
-                        color: AppThemes.greenColor.color,
-                        fontWeight: FontWeight.bold,
-                      ),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(16),
-                        borderSide: BorderSide(color: AppThemes.lightGrey.color, width: 1.5),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(16),
-                        borderSide: BorderSide(color: AppThemes.greenColor.color, width: 2),
-                      ),
-                    ),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'يرجى إدخال رقم البطاقة';
-                      }
-                      if (!RegExp(r'^\d{16}$').hasMatch(value)) {
-                        return 'رقم البطاقة يجب أن يكون 16 رقمًا';
-                      }
-                      return null;
-                    },
-                  ),
-                ),
-                const SizedBox(height: 12),
-                // 🟢 تاريخ + CVV
-                Row(
-                  children: [
-                    Expanded(
-                      child: TextFormField(
-                        controller: _validDateController,
-                        decoration: InputDecoration(
-                          labelText: "MM/YY",
-                          floatingLabelStyle: TextStyle(
-                            color: AppThemes.greenColor.color,
-                            fontWeight: FontWeight.bold,
-                          ),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(16),
-                            borderSide: BorderSide(color: AppThemes.lightGrey.color, width: 1.5),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(16),
-                            borderSide: BorderSide(color: AppThemes.greenColor.color, width: 2),
-                          ),
-                        ),
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'يرجى إدخال تاريخ الصلاحية';
-                          }
-                          if (!RegExp(r'^(0[1-9]|1[0-2])\/[0-9]{2}$').hasMatch(value)) {
-                            return 'صيغة التاريخ غير صحيحة (MM/YY)';
-                          }
-                          return null;
-                        },
-                      ),
-                    ),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: TextFormField(
-                        controller: _cvvController,
-                        keyboardType: TextInputType.number,
-                        decoration: InputDecoration(
-                          labelText: "CVV",
-                          floatingLabelStyle: TextStyle(
-                            color: AppThemes.greenColor.color,
-                            fontWeight: FontWeight.bold,
-                          ),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(16),
-                            borderSide: BorderSide(color: AppThemes.lightGrey.color, width: 1.5),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(16),
-                            borderSide: BorderSide(color: AppThemes.greenColor.color, width: 2),
-                          ),
-                        ),
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'يرجى إدخال CVV';
-                          }
-                          if (!RegExp(r'^\d{3,4}$').hasMatch(value)) {
-                            return 'CVV يجب أن يكون 3 أو 4 أرقام';
-                          }
-                          return null;
-                        },
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 20),
-                // 🟢 زر الحفظ
-                SizedBox(
-                  width: double.infinity,
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: AppThemes.greenColor.color,
-                      padding: const EdgeInsets.symmetric(vertical: 14),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                    ),
-                    onPressed: () {
-                      if (_formKey.currentState!.validate()) {
-                        widget.onSave({
-                          'name': _nameController.text,
-                          'cardNumber': _cardNumberController.text,
-                          'validDate': _validDateController.text,
-                          'cvv': _cvvController.text,
-                        });
-                        Navigator.pop(context);
-                      }
-                    },
-                    child: const Text(
-                      "حفظ",
+        child: Form(
+          key: _formKey,
+          child: Container(
+            decoration: BoxDecoration(
+              color: AppThemes.whiteColor.color,
+            ),
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Center(
+                    child: Text(
+                      "إضافة بيانات ${widget.cardType}",
+                      textDirection: TextDirection.rtl,
                       style: TextStyle(
                         fontFamily: "Tajawal",
-                        fontSize: 16,
+                        fontSize: 18,
                         fontWeight: FontWeight.bold,
-                        color: Colors.white,
+                        color: AppThemes.greenColor.color,
                       ),
                     ),
                   ),
-                ),
-                const SizedBox(height: 10),
-              ],
+                  const SizedBox(height: 20),
+                  // 🟢 اسم حامل البطاقة
+                  Directionality(
+                    textDirection: TextDirection.rtl,
+                    child: TextFormField(
+                      controller: _nameController,
+                      decoration: InputDecoration(
+                        labelText: "اسم حامل البطاقة",
+                        floatingLabelStyle: TextStyle(
+                          color: AppThemes.greenColor.color,
+                          fontWeight: FontWeight.bold,
+                        ),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(16),
+                          borderSide: BorderSide(color: AppThemes.lightGrey.color, width: 1.5),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(16),
+                          borderSide: BorderSide(color: AppThemes.greenColor.color, width: 2),
+                        ),
+                      ),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'يرجى إدخال اسم حامل البطاقة';
+                        }
+                        return null;
+                      },
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+                  // 🟢 رقم البطاقة
+                  Directionality(
+                    textDirection: TextDirection.rtl,
+                    child: TextFormField(
+                      controller: _cardNumberController,
+                      keyboardType: TextInputType.number,
+                      decoration: InputDecoration(
+                        labelText: "رقم البطاقة",
+                        floatingLabelStyle: TextStyle(
+                          color: AppThemes.greenColor.color,
+                          fontWeight: FontWeight.bold,
+                        ),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(16),
+                          borderSide: BorderSide(color: AppThemes.lightGrey.color, width: 1.5),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(16),
+                          borderSide: BorderSide(color: AppThemes.greenColor.color, width: 2),
+                        ),
+                      ),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'يرجى إدخال رقم البطاقة';
+                        }
+                        if (!RegExp(r'^\d{16}$').hasMatch(value)) {
+                          return 'رقم البطاقة يجب أن يكون 16 رقمًا';
+                        }
+                        return null;
+                      },
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+                  // 🟢 تاريخ + CVV
+                  Row(
+                    children: [
+                      Expanded(
+                        child: TextFormField(
+                          controller: _validDateController,
+                          decoration: InputDecoration(
+                            labelText: "MM/YY",
+                            floatingLabelStyle: TextStyle(
+                              color: AppThemes.greenColor.color,
+                              fontWeight: FontWeight.bold,
+                            ),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(16),
+                              borderSide: BorderSide(color: AppThemes.lightGrey.color, width: 1.5),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(16),
+                              borderSide: BorderSide(color: AppThemes.greenColor.color, width: 2),
+                            ),
+                          ),
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'يرجى إدخال تاريخ الصلاحية';
+                            }
+                            if (!RegExp(r'^(0[1-9]|1[0-2])\/[0-9]{2}$').hasMatch(value)) {
+                              return 'صيغة التاريخ غير صحيحة (MM/YY)';
+                            }
+                            return null;
+                          },
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: TextFormField(
+                          controller: _cvvController,
+                          keyboardType: TextInputType.number,
+                          decoration: InputDecoration(
+                            labelText: "CVV",
+                            floatingLabelStyle: TextStyle(
+                              color: AppThemes.greenColor.color,
+                              fontWeight: FontWeight.bold,
+                            ),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(16),
+                              borderSide: BorderSide(color: AppThemes.lightGrey.color, width: 1.5),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(16),
+                              borderSide: BorderSide(color: AppThemes.greenColor.color, width: 2),
+                            ),
+                          ),
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'يرجى إدخال CVV';
+                            }
+                            if (!RegExp(r'^\d{3,4}$').hasMatch(value)) {
+                              return 'CVV يجب أن يكون 3 أو 4 أرقام';
+                            }
+                            return null;
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 20),
+                  // 🟢 زر الحفظ
+                  SizedBox(
+                    width: double.infinity,
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: AppThemes.greenColor.color,
+                        padding: const EdgeInsets.symmetric(vertical: 14),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                      ),
+                      onPressed: () {
+                        if (_formKey.currentState!.validate()) {
+                          widget.onSave({
+                            'name': _nameController.text,
+                            'cardNumber': _cardNumberController.text,
+                            'validDate': _validDateController.text,
+                            'cvv': _cvvController.text,
+                          });
+                          Navigator.pop(context);
+                        }
+                      },
+                      child: const Text(
+                        "حفظ",
+                        style: TextStyle(
+                          fontFamily: "Tajawal",
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                ],
+              ),
             ),
           ),
         ),

@@ -8,8 +8,9 @@ import '../../utils/app_theme.dart';
 
 class AddressCard extends StatelessWidget {
   final CurrentAddressesModel address;
+  final BuildContext parentContext;
 
-  const AddressCard({super.key, required this.address});
+  const AddressCard({super.key, required this.address, required this.parentContext});
 
   @override
   Widget build(BuildContext context) {
@@ -49,7 +50,7 @@ class AddressCard extends StatelessWidget {
                           ),
                           TextButton(
                             onPressed: () {
-                              context.read<CurrentAddressesCubit>().deleteAddress(address.id, address.type);
+                              parentContext.read<CurrentAddressesCubit>().deleteAddress(address.id, address.type);
                               Navigator.pop(context);
                             },
                             child: const Text("حذف"),

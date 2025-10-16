@@ -6,6 +6,7 @@ import '../../../../core/utils/app_theme.dart';
 import '../../../../core/widgets/app_btn.dart';
 import '../../../../core/widgets/app_field.dart';
 import '../../../../core/widgets/custom_app_bar/custom_app_bar.dart';
+import '../../../../core/widgets/custom_message_dialog.dart';
 import '../cubit/charge_cubit.dart';
 import '../cubit/charge_state.dart';
 
@@ -40,19 +41,17 @@ class _ChargeState extends State<Charge> {
     return BlocListener<WalletChargeCubit, WalletChargeState>(
       listener: (context, state) {
         if (state is WalletChargeSuccess) {
-          // showCustomMessageDialog(
-          //   context,
-          //   state.message,
-          //   autoDismissDuration: const Duration(seconds: 2),
-          // );
+          showCustomMessageDialog(
+            context,
+            state.message,
+          );
           // النقل إلى AppRoutes.wallet بعد النجاح
           Navigator.pushReplacementNamed(context, NamedRoutes.wallet);
         } else if (state is WalletChargeError) {
-          // showCustomMessageDialog(
-          //   context,
-          //   state.message,
-          //   autoDismissDuration: const Duration(seconds: 2),
-          // );
+          showCustomMessageDialog(
+            context,
+            state.message,
+          );
         }
       },
       child: Scaffold(
@@ -104,11 +103,10 @@ class _ChargeState extends State<Charge> {
                   backgroundColor: AppThemes.greenColor.color,
                   onPressed: () {
                     if (amountController.text.isEmpty || transactionIdController.text.isEmpty) {
-                      // showCustomMessageDialog(
-                      //   context,
-                      //   "يرجى إدخال المبلغ ورقم العملية",
-                      //   autoDismissDuration: const Duration(seconds: 2),
-                      // );
+                      showCustomMessageDialog(
+                        context,
+                        "يرجى إدخال المبلغ ورقم العملية",
+                      );
                       return;
                     }
                     try {

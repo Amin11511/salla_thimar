@@ -18,11 +18,6 @@ class FavoriteTab extends StatefulWidget {
 }
 
 class _FavoriteTabState extends State<FavoriteTab> {
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   context.read<FavoriteTabCubit>().fetchFavoriteProducts();
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -84,7 +79,11 @@ class _FavoriteTabState extends State<FavoriteTab> {
                   create: (context) => CartCubit(CartService(ServerGate.i)),
                   child: GestureDetector(
                     onTap: () {
-                      //Navigator.pushNamed(context, NamedRoutes.productDetails(product.id));
+                      Navigator.pushNamed(
+                        context,
+                        NamedRoutes.productDetails,
+                        arguments: {'productId': product.id},
+                      );
                     },
                     child: BuildProductCard(
                       imagePath: product.mainImage,

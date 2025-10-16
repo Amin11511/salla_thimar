@@ -5,6 +5,7 @@ import 'package:skydive/core/widgets/app_btn.dart';
 import '../../../core/utils/app_theme.dart';
 import '../../../core/widgets/app_field.dart';
 import '../../../core/widgets/custom_app_bar/custom_app_bar.dart';
+import '../../../core/widgets/custom_message_dialog.dart';
 import '../cubit/sug_and_comp_cubit.dart';
 import '../cubit/sug_and_comp_state.dart';
 
@@ -32,22 +33,20 @@ class SugAndComp extends StatelessWidget {
             print('SugAndCompCubit State: $state');
             if (state is SugAndCompSuccess) {
               print('SugAndCompSuccess: ${state.message}');
-              // showCustomMessageDialog(
-              //   context,
-              //   state.message,
-              //   autoDismissDuration: const Duration(seconds: 2),
-              // );
+              showCustomMessageDialog(
+                context,
+                state.message,
+              );
               nameController.clear();
               phoneController.clear();
               titleController.clear();
               contentController.clear();
             } else if (state is SugAndCompError) {
               print('SugAndCompError: ${state.message}');
-              // showCustomMessageDialog(
-              //   context,
-              //   state.message,
-              //   autoDismissDuration: const Duration(seconds: 2),
-              // );
+              showCustomMessageDialog(
+                context,
+                state.message,
+              );
             }
           },
           builder: (context, state) {
@@ -83,11 +82,10 @@ class SugAndComp extends StatelessWidget {
                           content: contentController.text,
                         );
                       } else {
-                        // showCustomMessageDialog(
-                        //   context,
-                        //   "يرجى ملء جميع الحقول",
-                        //   autoDismissDuration: const Duration(seconds: 2),
-                        // );
+                        showCustomMessageDialog(
+                          context,
+                          "يرجى ملء جميع الحقول",
+                        );
                       }
                     },
                   ),

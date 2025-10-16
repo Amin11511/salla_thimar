@@ -7,6 +7,7 @@ import '../../../../core/routes/routes.dart';
 import '../../../../core/services/server_gate.dart';
 import '../../../../core/widgets/app_btn.dart';
 import '../../../../core/widgets/app_field.dart';
+import '../../../../core/widgets/custom_message_dialog.dart';
 import '../../../../gen/assets.gen.dart';
 import '../../shared_repo/auth_repository.dart';
 import '../cubit/confirm_password_cubit.dart';
@@ -128,11 +129,10 @@ class _ConfirmPasswordState extends State<ConfirmPassword> {
                                 );
                                 Navigator.pushReplacementNamed(context, NamedRoutes.login);
                               } else if (state is ConfirmPasswordError) {
-                                // showCustomMessageDialog(
-                                //   context,
-                                //   state.message,
-                                //   autoDismissDuration: const Duration(seconds: 2),
-                                // );
+                                showCustomMessageDialog(
+                                  context,
+                                  state.message,
+                                );
                               }
                             },
                             builder: (context, state) {

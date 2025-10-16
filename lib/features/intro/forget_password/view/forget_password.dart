@@ -8,6 +8,7 @@ import 'package:skydive/core/utils/extensions.dart';
 import 'package:skydive/core/widgets/app_btn.dart';
 import '../../../../core/services/server_gate.dart';
 import '../../../../core/widgets/app_field.dart';
+import '../../../../core/widgets/custom_message_dialog.dart';
 import '../../../../gen/assets.gen.dart';
 import '../../shared_repo/auth_repository.dart';
 import '../cubit/forget_password_cubit.dart';
@@ -165,11 +166,10 @@ class _ForgetPasswordState extends State<ForgetPassword> {
                                   },
                                 );
                               } else if (state is ForgetPasswordError) {
-                                // showCustomMessageDialog(
-                                //   context,
-                                //   state.message,
-                                //   autoDismissDuration: const Duration(seconds: 2),
-                                // );
+                                showCustomMessageDialog(
+                                  context,
+                                  state.message,
+                                );
                               }
                             },
                             builder: (context, state) {

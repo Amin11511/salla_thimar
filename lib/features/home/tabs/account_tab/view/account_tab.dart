@@ -5,6 +5,7 @@ import 'package:skydive/core/utils/extensions.dart';
 import '../../../../../core/routes/routes.dart';
 import '../../../../../core/utils/app_theme.dart';
 import '../../../../../core/widgets/account_tab_widgets/profile_header.dart';
+import '../../../../../core/widgets/custom_message_dialog.dart';
 import '../../../../../gen/assets.gen.dart';
 import '../cubit/logout_cubit.dart';
 import '../cubit/logout_state.dart';
@@ -39,7 +40,7 @@ class _AccountTabState extends State<AccountTab> {
           } else if (state is LogoutError) {
             _logger.e('AccountTab: Logout error = ${state.message}');
             // Show error message
-            //showCustomMessageDialog(context, state.message);
+            showCustomMessageDialog(context, state.message);
           }
         },
         child: BlocBuilder<ProfileCubit, ProfileState>(
@@ -119,7 +120,7 @@ class _AccountTabState extends State<AccountTab> {
                             ),
                             const SizedBox(height: 10),
                             Text(
-                              profile.phone,
+                              '+${profile.phone}',
                               textDirection: TextDirection.ltr,
                               style: TextStyle(
                                 fontSize: 18,
@@ -236,16 +237,16 @@ class _AccountTabState extends State<AccountTab> {
                           const SizedBox(height: 25),
                           GestureDetector(
                             onTap: () {
-                              // showCustomConfirmDialog(
-                              //   context: context,
-                              //   message: "هل تريد تسجيل الخروج؟",
-                              //   onConfirm: () {
-                              //     context.read<LogoutCubit>().logout();
-                              //   },
-                              //   onCancel: () {
-                              //     Navigator.of(context).pop();
-                              //   },
-                              // );
+                              showCustomConfirmDialog(
+                                context: context,
+                                message: "هل تريد تسجيل الخروج؟",
+                                onConfirm: () {
+                                  context.read<LogoutCubit>().logout();
+                                },
+                                onCancel: () {
+                                  Navigator.of(context).pop();
+                                },
+                              );
                             },
                             child: Padding(
                               padding: const EdgeInsets.symmetric(vertical: 8),

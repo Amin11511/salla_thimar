@@ -6,10 +6,12 @@ import 'package:geolocator/geolocator.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:logger/logger.dart';
 import 'package:skydive/core/utils/extensions.dart';
+import '../../../../core/routes/routes.dart';
 import '../../../../core/utils/app_theme.dart';
 import '../../../../core/widgets/app_btn.dart';
 import '../../../../core/widgets/app_field.dart';
 import '../../../../core/widgets/custom_app_bar/custom_app_bar.dart';
+import '../../../../core/widgets/custom_message_dialog.dart';
 import '../../address/cubit/address_cubit.dart';
 import '../cubit/add_address_cubit.dart';
 import '../cubit/add_address_state.dart';
@@ -57,11 +59,10 @@ class _AddAddressState extends State<AddAddress> {
           _showPermissionPermanentlyDeniedDialog();
         } else {
           _logger.w("Location permission denied");
-          // showCustomMessageDialog(
-          //   context,
-          //   "يرجى السماح بالوصول إلى الموقع لتحديد العنوان",
-          //   autoDismissDuration: const Duration(seconds: 2),
-          // );
+          showCustomMessageDialog(
+            context,
+            "يرجى السماح بالوصول إلى الموقع لتحديد العنوان",
+          );
         }
       } else if (status.isPermanentlyDenied) {
         _logger.w("Location permission permanently denied");
@@ -69,11 +70,10 @@ class _AddAddressState extends State<AddAddress> {
       }
     } catch (e) {
       _logger.e("Error checking location permission: $e");
-      // showCustomMessageDialog(
-      //   context,
-      //   "خطأ في التحقق من إذن الموقع",
-      //   autoDismissDuration: const Duration(seconds: 2),
-      // );
+      showCustomMessageDialog(
+        context,
+        "خطأ في التحقق من إذن الموقع",
+      );
     }
   }
 
@@ -100,11 +100,10 @@ class _AddAddressState extends State<AddAddress> {
       _logger.d("Current location: lat=${_center.latitude}, lng=${_center.longitude}, address=$_location");
     } catch (e) {
       _logger.e("Error getting current location: $e");
-      // showCustomMessageDialog(
-      //   context,
-      //   "فشل جلب الموقع الحالي",
-      //   autoDismissDuration: const Duration(seconds: 2),
-      // );
+      showCustomMessageDialog(
+        context,
+        "فشل جلب الموقع الحالي",
+      );
     }
   }
 
@@ -137,11 +136,10 @@ class _AddAddressState extends State<AddAddress> {
       setState(() {
         _location = "فشل جلب العنوان، تحقق من الاتصال بالإنترنت";
       });
-      // showCustomMessageDialog(
-      //   context,
-      //   "فشل جلب العنوان، تحقق من الاتصال بالإنترنت",
-      //   autoDismissDuration: const Duration(seconds: 2),
-      // );
+      showCustomMessageDialog(
+        context,
+        "فشل جلب العنوان، تحقق من الاتصال بالإنترنت",
+      );
     }
   }
 
@@ -185,11 +183,10 @@ class _AddAddressState extends State<AddAddress> {
           context.read<CurrentAddressesCubit>().fetchAddresses();
           Navigator.pop(context);
         } else if (state is AddressError) {
-          // showCustomMessageDialog(
-          //   context,
-          //   state.message,
-          //   autoDismissDuration: const Duration(seconds: 2),
-          // );
+          showCustomMessageDialog(
+            context,
+            state.message,
+          );
         }
       },
       builder: (context, state) {
@@ -335,25 +332,23 @@ class _AddAddressState extends State<AddAddress> {
                           : AppBtn(
                         title: "إضافة العنوان",
                         backgroundColor: AppThemes.greenColor.color,
-                        onPressed: () {
-                          if (_phoneController.text.isEmpty || _descriptionController.text.isEmpty) {
-                            // showCustomMessageDialog(
-                            //   context,
-                            //   "يرجى ملء جميع الحقول",
-                            //   autoDismissDuration: const Duration(seconds: 2),
-                            // );
-                            return;
+                          onPressed: () async {
+                            if (_phoneController.text.isEmpty || _descriptionController.text.isEmpty) {
+                              showCustomMessageDialog(context, "يرجى ملء جميع الحقول");
+                              return;
+                            }
+                            final addressCubit = context.read<AddressCubit>();
+                            await addressCubit.addAddress(
+                              type: _addressType,
+                              phone: _phoneController.text,
+                              description: _descriptionController.text,
+                              location: _location,
+                              lat: _center.latitude,
+                              lng: _center.longitude,
+                              isDefault: 1,
+                            );
                           }
-                          context.read<AddressCubit>().addAddress(
-                            type: _addressType,
-                            phone: _phoneController.text,
-                            description: _descriptionController.text,
-                            location: _location,
-                            lat: _center.latitude,
-                            lng: _center.longitude,
-                            isDefault: 1,
-                          );
-                        },
+
                       ),
                       SizedBox(height: 20),
                     ],

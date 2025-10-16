@@ -29,4 +29,5 @@ class NamedRoutes {
   static const String orderComplete = '/orderComplete';
   static const String categoryProduct = '/categoryProduct';
   static const String productDetails = '/productDetails';
+  static const String orderDetails = '/orderDetails';
 }

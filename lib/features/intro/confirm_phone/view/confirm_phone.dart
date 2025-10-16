@@ -7,6 +7,7 @@ import 'package:skydive/core/utils/extensions.dart';
 import 'package:skydive/core/widgets/app_btn.dart';
 import '../../../../core/routes/routes.dart';
 import '../../../../core/services/server_gate.dart';
+import '../../../../core/widgets/custom_message_dialog.dart';
 import '../../../../gen/assets.gen.dart';
 import '../../shared_repo/auth_repository.dart';
 import '../cubit/confirm_phone_cubit.dart';
@@ -152,17 +153,15 @@ class _ConfirmPhoneState extends State<ConfirmPhone> {
                                 },
                               );
                             } else if (state is ConfirmPhoneResendSuccess) {
-                              // showCustomMessageDialog(
-                              //   context,
-                              //   state.message,
-                              //   autoDismissDuration: const Duration(seconds: 2),
-                              // );
+                              showCustomMessageDialog(
+                                context,
+                                state.message,
+                              );
                             } else if (state is ConfirmPhoneError) {
-                              // showCustomMessageDialog(
-                              //   context,
-                              //   state.message,
-                              //   autoDismissDuration: const Duration(seconds: 2),
-                              // );
+                              showCustomMessageDialog(
+                                context,
+                                state.message,
+                              );
                             }
                           },
                           builder: (context, state) {
@@ -184,11 +183,10 @@ class _ConfirmPhoneState extends State<ConfirmPhone> {
                                     countryCode: widget.countryCode,
                                   );
                                 } else {
-                                  // showCustomMessageDialog(
-                                  //   context,
-                                  //   'الرجاء إدخال كود مكون من 4 أرقام',
-                                  //   autoDismissDuration: const Duration(seconds: 2),
-                                  // );
+                                  showCustomMessageDialog(
+                                    context,
+                                    'الرجاء إدخال كود مكون من 4 أرقام',
+                                  );
                                 }
                               },
                             );

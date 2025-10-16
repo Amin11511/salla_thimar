@@ -6,6 +6,7 @@ import '../../../core/utils/app_theme.dart';
 import '../../../core/widgets/app_field.dart';
 import '../../../core/widgets/cart/product_item.dart';
 import '../../../core/widgets/custom_app_bar/custom_app_bar.dart';
+import '../../../core/widgets/custom_message_dialog.dart';
 import '../cubit/cart_cubit.dart';
 import '../cubit/cart_state.dart';
 import '../model/product_cart_model.dart';
@@ -57,9 +58,9 @@ class _CartState extends State<Cart> {
                 setState(() {
                   _couponError = null;
                 });
-                //showCustomMessageDialog(context, state.message);
+                showCustomMessageDialog(context, state.message);
               } else if (state is CartError) {
-                //showCustomMessageDialog(context, 'خطأ: ${state.message}');
+                showCustomMessageDialog(context, 'خطأ: ${state.message}');
               } else if (state is CartLoaded) {
                 setState(() {
                   _couponError = null;
@@ -141,17 +142,17 @@ class _CartState extends State<Cart> {
                               image: item.image,
                               quantity: item.amount,
                               onDelete: () {
-                                // showCustomConfirmDialog(
-                                //   context: context,
-                                //   message: 'تأكيد حذف الصنف من السلة؟',
-                                //   onConfirm: () {
-                                //     context.read<CartCubit>().deleteFromCart(item.id);
-                                //     Navigator.of(context).pop(); // إغلاق CustomConfirmDialog
-                                //   },
-                                //   onCancel: () {
-                                //     Navigator.of(context).pop();
-                                //   },
-                                // );
+                                showCustomConfirmDialog(
+                                  context: context,
+                                  message: 'تأكيد حذف الصنف من السلة؟',
+                                  onConfirm: () {
+                                    context.read<CartCubit>().deleteFromCart(item.id);
+                                    Navigator.of(context).pop();
+                                  },
+                                  onCancel: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                );
                               },
                               onIncrease: () {
                                 context.read<CartCubit>().updateQuantity(item.id, item.amount + 1);

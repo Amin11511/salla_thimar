@@ -6,6 +6,7 @@ import 'package:skydive/core/utils/extensions.dart';
 import 'package:skydive/features/cart/repo/cart_service.dart';
 import '../../../../../core/routes/routes.dart';
 import '../../../../../core/utils/app_theme.dart';
+import '../../../../../core/widgets/custom_message_dialog.dart';
 import '../../../../../core/widgets/home_tab/build_category_item.dart';
 import '../../../../../core/widgets/home_tab/build_product_card.dart';
 import '../../../../../gen/assets.gen.dart';
@@ -192,11 +193,11 @@ class _HomeTabState extends State<HomeTab> {
               BlocListener<CartCubit, CartState>(
                 listener: (context, state) {
                   if (state is CartSuccess) {
-                    //showCustomMessageDialog(context, state.message, autoDismissDuration: const Duration(seconds: 1),);
+                    showCustomMessageDialog(context, state.message,);
                   } else if (state is CartError) {
-                    //showCustomMessageDialog(context, 'خطأ: ${state.message}', autoDismissDuration: const Duration(seconds: 1),);
+                    showCustomMessageDialog(context, 'خطأ: ${state.message}',);
                   } else if (state is CartCouponError) {
-                    //showCustomMessageDialog(context, 'خطأ الكوبون: ${state.message}', autoDismissDuration: const Duration(seconds: 1),);
+                    showCustomMessageDialog(context, 'خطأ الكوبون: ${state.message}',);
                   }
                 },
               ),

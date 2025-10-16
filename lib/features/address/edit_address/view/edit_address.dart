@@ -9,6 +9,7 @@ import '../../../../core/utils/app_theme.dart';
 import '../../../../core/widgets/app_btn.dart';
 import '../../../../core/widgets/app_field.dart';
 import '../../../../core/widgets/custom_app_bar/custom_app_bar.dart';
+import '../../../../core/widgets/custom_message_dialog.dart';
 import '../../address/cubit/address_cubit.dart';
 import '../../address/cubit/address_state.dart';
 import '../../address/model/address_model.dart';
@@ -71,11 +72,10 @@ class _EditAddressState extends State<EditAddress> {
       }
     } catch (e) {
       _logger.e("Error checking location permission: $e");
-      // showCustomMessageDialog(
-      //   context,
-      //   "خطأ في التحقق من إذن الموقع",
-      //   autoDismissDuration: const Duration(seconds: 2),
-      // );
+      showCustomMessageDialog(
+        context,
+        "خطأ في التحقق من إذن الموقع",
+      );
     }
   }
 
@@ -101,11 +101,10 @@ class _EditAddressState extends State<EditAddress> {
       _logger.d("Current location: lat=${_center.latitude}, lng=${_center.longitude}");
     } catch (e) {
       _logger.e("Error getting current location: $e");
-      // showCustomMessageDialog(
-      //   context,
-      //   "فشل جلب الموقع الحالي",
-      //   autoDismissDuration: const Duration(seconds: 2),
-      // );
+      showCustomMessageDialog(
+        context,
+        "فشل جلب الموقع الحالي",
+      );
     }
   }
 
@@ -203,18 +202,16 @@ class _EditAddressState extends State<EditAddress> {
     return BlocConsumer<CurrentAddressesCubit, CurrentAddressesState>(
       listener: (context, state) {
         if (state is UpdateAddressSuccess) {
-          // showCustomMessageDialog(
-          //   context,
-          //   "تم تعديل العنوان بنجاح",
-          //   autoDismissDuration: const Duration(seconds: 2),
-          // );
+          showCustomMessageDialog(
+            context,
+            "تم تعديل العنوان بنجاح",
+          );
           Navigator.pop(context);
         } else if (state is UpdateAddressError) {
-          // showCustomMessageDialog(
-          //   context,
-          //   state.message,
-          //   autoDismissDuration: const Duration(seconds: 2),
-          // );
+          showCustomMessageDialog(
+            context,
+            state.message,
+          );
         }
       },
       builder: (context, state) {
@@ -399,11 +396,10 @@ class _EditAddressState extends State<EditAddress> {
                           if (_phoneController.text.isEmpty ||
                               _descriptionController.text.isEmpty ||
                               _locationController.text.isEmpty) {
-                            // showCustomMessageDialog(
-                            //   context,
-                            //   "يرجى ملء جميع الحقول",
-                            //   autoDismissDuration: const Duration(seconds: 2),
-                            // );
+                            showCustomMessageDialog(
+                              context,
+                              "يرجى ملء جميع الحقول",
+                            );
                             return;
                           }
                           context.read<CurrentAddressesCubit>().updateAddress(

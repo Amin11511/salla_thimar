@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:skydive/core/utils/extensions.dart';
+import '../../../core/services/server_gate.dart';
 import '../../../core/utils/app_theme.dart';
 import '../../../core/widgets/app_btn.dart';
 import '../../../core/widgets/app_field.dart';
 import '../../../core/widgets/custom_app_bar/custom_app_bar.dart';
+import '../../../core/widgets/custom_message_dialog.dart';
 import '../../../gen/assets.gen.dart';
 import '../cubit/contact_cubit.dart';
 import '../cubit/contact_state.dart';
@@ -22,7 +24,7 @@ class Contact extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => ContactCubit(context.read<ContactService>())..fetchContactInfo(),
+      create: (context) => ContactCubit(ContactService(ServerGate.i))..fetchContactInfo(),
       child: ScaffoldMessenger(
         child: Scaffold(
           appBar: CustomAppBar(
@@ -37,22 +39,20 @@ class Contact extends StatelessWidget {
               print('ContactCubit State: $state');
               if (state is SendMessageSuccess) {
                 print('SendMessageSuccess: ${state.message}');
-                // showCustomMessageDialog(
-                //   context,
-                //   state.message,
-                //   autoDismissDuration: const Duration(seconds: 2),
-                // );
+                showCustomMessageDialog(
+                  context,
+                  state.message,
+                );
                 nameController.clear();
                 phoneController.clear();
                 subjectController.clear();
                 messageController.clear();
               } else if (state is SendMessageError) {
                 print('SendMessageError: ${state.message}');
-                // showCustomMessageDialog(
-                //   context,
-                //   state.message,
-                //   autoDismissDuration: const Duration(seconds: 2),
-                // );
+                showCustomMessageDialog(
+                  context,
+                  state.message,
+                );
               }
             },
             builder: (context, state) {
@@ -121,8 +121,13 @@ class Contact extends StatelessWidget {
                                   mainAxisAlignment: MainAxisAlignment.start,
                                   children: [
                                     Row(
-                                      mainAxisAlignment: MainAxisAlignment.end,
                                       children: [
+                                        Image.asset(
+                                          Assets.images.location.path,
+                                          width: 18,
+                                          height: 18,
+                                        ),
+                                        const SizedBox(width: 10),
                                         Expanded(
                                           child: Text(
                                             cubit.contactInfo?.location ?? 'جاري التحميل...',
@@ -135,19 +140,18 @@ class Contact extends StatelessWidget {
                                             ),
                                           ),
                                         ),
-                                        const SizedBox(width: 10),
-                                        Image.asset(
-                                          Assets.images.location.path,
-                                          width: 18,
-                                          height: 18,
-                                        ),
                                       ],
                                     ),
                                     if (cubit.contactInfo?.phone.isNotEmpty ?? false) ...[
                                       const SizedBox(height: 10),
                                       Row(
-                                        mainAxisAlignment: MainAxisAlignment.end,
                                         children: [
+                                          Image.asset(
+                                            Assets.images.calling.path,
+                                            width: 18,
+                                            height: 18,
+                                          ),
+                                          const SizedBox(width: 10),
                                           Expanded(
                                             child: Text(
                                               cubit.contactInfo!.phone,
@@ -160,12 +164,6 @@ class Contact extends StatelessWidget {
                                               ),
                                             ),
                                           ),
-                                          const SizedBox(width: 10),
-                                          Image.asset(
-                                            Assets.images.calling.path,
-                                            width: 18,
-                                            height: 18,
-                                          ),
                                         ],
                                       ),
                                     ],
@@ -174,6 +172,12 @@ class Contact extends StatelessWidget {
                                       Row(
                                         mainAxisAlignment: MainAxisAlignment.end,
                                         children: [
+                                          Image.asset(
+                                            Assets.images.message.path,
+                                            width: 18,
+                                            height: 18,
+                                          ),
+                                          const SizedBox(width: 10),
                                           Expanded(
                                             child: Text(
                                               cubit.contactInfo!.email,
@@ -185,12 +189,6 @@ class Contact extends StatelessWidget {
                                                 color: AppThemes.greenColor.color,
                                               ),
                                             ),
-                                          ),
-                                          const SizedBox(width: 10),
-                                          Image.asset(
-                                            Assets.images.message.path,
-                                            width: 18,
-                                            height: 18,
                                           ),
                                         ],
                                       ),
@@ -212,11 +210,15 @@ class Contact extends StatelessWidget {
                             color: AppThemes.greenColor.color,
                           ),
                         ),
-                        const SizedBox(height: 10),
+                        SizedBox(height: MediaQuery.of(context).size.height * 0.01),
                         AppField(hintText: "الإسم", controller: nameController),
+                        const SizedBox(height: 10),
                         AppField(hintText: "رقم الموبايل", controller: phoneController),
+                        const SizedBox(height: 10),
                         AppField(hintText: "عنوان الرسالة", controller: subjectController),
+                        const SizedBox(height: 10),
                         AppField(hintText: "نص الرسالة", controller: messageController),
+                        const SizedBox(height: 10),
                         state is SendMessageLoading
                             ? Center(child: CircularProgressIndicator(color: AppThemes.greenColor.color))
                             : AppBtn(
@@ -234,11 +236,10 @@ class Contact extends StatelessWidget {
                                 content: messageController.text,
                               );
                             } else {
-                              // showCustomMessageDialog(
-                              //   context,
-                              //   "يرجى ملء جميع الحقول",
-                              //   autoDismissDuration: const Duration(seconds: 2),
-                              // );
+                              showCustomMessageDialog(
+                                context,
+                                "يرجى ملء جميع الحقول",
+                              );
                             }
                           },
                         ),

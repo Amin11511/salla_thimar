@@ -28,6 +28,7 @@ import 'package:skydive/features/intro/login/view/login.dart';
 import 'package:skydive/features/intro/register/view/register.dart';
 import 'package:skydive/features/order_complete/repo/order_complete_service.dart';
 import 'package:skydive/features/order_complete/view/order_complete.dart';
+import 'package:skydive/features/order_details_screen/view/order_details_screen.dart';
 import 'package:skydive/features/policy/cubit/policy_cubit.dart';
 import 'package:skydive/features/policy/repo/policy_service.dart';
 import 'package:skydive/features/policy/view/policy.dart';
@@ -63,6 +64,8 @@ import '../../features/home/tabs/home_tab/cubit/categories_cubit.dart';
 import '../../features/home/tabs/home_tab/cubit/home_product_cubit.dart';
 import '../../features/home/tabs/home_tab/cubit/slider_cubit.dart';
 import '../../features/home/tabs/home_tab/repo/home_service.dart';
+import '../../features/home/tabs/my_orders_tab/cubit/my_orders_tab_cubit.dart';
+import '../../features/home/tabs/my_orders_tab/repo/my_orders_tab_service.dart';
 import '../../features/home/tabs/my_orders_tab/view/my_orders_tab.dart';
 import '../../features/intro/confirm_password/cubit/confirm_password_cubit.dart';
 import '../../features/intro/confirm_password/view/confirm_password.dart';
@@ -93,10 +96,13 @@ class AppRoutes {
     NamedRoutes.home: (c) => const Home(),
     NamedRoutes.homeTab: (context) => const HomeTab(),
     NamedRoutes.notificationTab: (context) =>  BlocProvider(
-        create: (context) => NotificationCubit(NotificationService(ServerGate.i)),
+      create: (context) => NotificationCubit(NotificationService(ServerGate.i)),
       child: const NotificationTab(),
     ),
-    NamedRoutes.myOrdersTab: (c) => const MyOrdersTab(),
+    NamedRoutes.myOrdersTab: (c) => BlocProvider(
+      create: (context) => OrdersCubit(context.read<MyOrdersService>())..fetchOrders(),
+      child: const MyOrdersTab(),
+    ),
     NamedRoutes.accountTab: (context) => MultiBlocProvider(
       providers: [
         BlocProvider(
@@ -174,10 +180,27 @@ class AppRoutes {
       create: (context) => CurrentAddressesCubit(CurrentAddressesService(ServerGate.i)),
       child: const Address(),
     ),
-    NamedRoutes.addAddress: (context) => BlocProvider(
-      create: (context) => AddressCubit(AddressService(ServerGate.i)),
-      child: const AddAddress(),
-    ),
+    NamedRoutes.addAddress: (context) {
+      final args = ModalRoute.of(context)?.settings.arguments;
+      CurrentAddressesCubit? currentCubit;
+      if (args != null && args is CurrentAddressesCubit) {
+        currentCubit = args;
+      }
+      return MultiBlocProvider(
+        providers: [
+          BlocProvider(
+            create: (context) => AddressCubit(AddressService(ServerGate.i)),
+          ),
+          if (currentCubit != null)
+            BlocProvider.value(value: currentCubit!)
+          else
+            BlocProvider(
+              create: (context) => CurrentAddressesCubit(CurrentAddressesService(ServerGate.i)),
+            ),
+        ],
+        child: const AddAddress(),
+      );
+    },
     NamedRoutes.editAddress: (context) {
       final CurrentAddressesModel address =
       ModalRoute.of(context)!.settings.arguments as CurrentAddressesModel;
@@ -269,6 +292,12 @@ class AppRoutes {
         ],
         child: ProductDetails(productId: productId),
       );
+    },
+    NamedRoutes.orderDetails: (context)  {
+      final args = ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
+      final int orderId = args['orderId'];
+
+      return OrderDetailsScreen(orderId: orderId);
     },
   };
 }

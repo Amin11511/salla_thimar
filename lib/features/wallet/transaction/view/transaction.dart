@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:skydive/core/utils/app_theme.dart';
 import 'package:skydive/core/utils/extensions.dart';
 import '../../../../core/widgets/custom_app_bar/custom_app_bar.dart';
+import '../../../../core/widgets/custom_message_dialog.dart';
 import '../../../../core/widgets/wallet/transaction_card.dart';
 import '../../wallet/cubit/wallet_cubit.dart';
 import '../../wallet/cubit/wallet_state.dart';
@@ -44,11 +45,10 @@ class _TransactionState extends State<Transaction> {
     return BlocListener<WalletCubit, WalletState>(
       listener: (context, state) {
         if (state is WalletError) {
-          // showCustomMessageDialog(
-          //   context,
-          //   state.message,
-          //   autoDismissDuration: const Duration(seconds: 2),
-          // );
+          showCustomMessageDialog(
+            context,
+            state.message,
+          );
         }
       },
       child: Scaffold(

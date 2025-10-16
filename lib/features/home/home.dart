@@ -9,6 +9,8 @@ import 'package:skydive/features/home/tabs/favorite_tab/cubit/favorite_tab_cubit
 import 'package:skydive/features/home/tabs/favorite_tab/repo/favorite_tab_service.dart';
 import 'package:skydive/features/home/tabs/favorite_tab/view/favorite_tab.dart';
 import 'package:skydive/features/home/tabs/home_tab/view/home_tab.dart';
+import 'package:skydive/features/home/tabs/my_orders_tab/cubit/my_orders_tab_cubit.dart';
+import 'package:skydive/features/home/tabs/my_orders_tab/repo/my_orders_tab_service.dart';
 import 'package:skydive/features/home/tabs/my_orders_tab/view/my_orders_tab.dart';
 import 'package:skydive/features/home/tabs/notification_tab/view/notification_tab.dart';
 import '../../core/services/server_gate.dart';
@@ -36,7 +38,10 @@ class _HomeState extends State<Home> {
 
   List<Widget> get tabs => [
     HomeTab(),
-    const MyOrdersTab(),
+    BlocProvider(
+      create: (context) => OrdersCubit(MyOrdersService(ServerGate.i),)..fetchOrders(),
+      child: MyOrdersTab(),
+    ),
     const NotificationTab(),
     BlocProvider(
       create: (context) => FavoriteTabCubit(FavoriteTabService(ServerGate.i))..fetchFavoriteProducts(),

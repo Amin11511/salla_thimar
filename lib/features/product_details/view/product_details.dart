@@ -70,74 +70,66 @@ class _ProductDetailsState extends State<ProductDetails> {
                 backgroundColor: AppThemes.whiteColor.color,
                 centerTitle: true,
                 automaticallyImplyLeading: false,
-                leading: BlocBuilder<FavoriteCubit, FavoriteState>(
-                  builder: (context, favoriteState) {
-                    bool isLoading =
-                        favoriteState is FavoriteLoading &&
-                            favoriteState.productId == product.id;
-                    bool isFavorite = favoriteState is FavoriteSuccess
-                        ? favoriteState.favorites[product.id] ??
-                        product.isFavorite
-                        : product.isFavorite;
-
-                    return GestureDetector(
-                      onTap: isLoading
-                          ? null
-                          : () {
-                        context.read<FavoriteCubit>().toggleFavorite(
-                          product.id,
-                          isFavorite,
-                        );
-                      },
-                      child: Container(
-                        decoration: BoxDecoration(
-                          color: AppThemes.lightLightGrey.color,
-                          borderRadius: BorderRadius.circular(16),
-                        ),
-                        height: 48,
-                        width: 48,
-                        margin: const EdgeInsetsDirectional.only(start: 8),
-                        child: isLoading
-                            ? Center(
-                          child: SizedBox(
-                            height: 24,
-                            width: 24,
-                            child: CircularProgressIndicator(
-                              color: AppThemes.greenColor.color,
-                              strokeWidth: 2,
-                            ),
-                          ),
-                        )
-                            : Icon(
-                          Icons.favorite,
-                          color: isFavorite
-                              ? AppThemes.greenColor.color
-                              : AppThemes.lightGrey.color,
-                        ),
-                      ),
-                    );
+                leading: IconButton(
+                  icon: Icon(
+                    Icons.arrow_back_ios,
+                    color: AppThemes.greenColor.color,
+                  ),
+                  onPressed: () {
+                    Navigator.pop(context);
                   },
                 ),
                 actions: [
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: AppThemes.lightLightGrey.color,
-                        borderRadius: BorderRadius.circular(16),
-                      ),
-                      width: 48,
-                      height: 48,
-                      child: IconButton(
-                        icon: Icon(
-                          Icons.arrow_forward_ios,
-                          color: AppThemes.greenColor.color,
-                        ),
-                        onPressed: () {
-                          Navigator.pop(context);
+                  BlocBuilder<FavoriteCubit, FavoriteState>(
+                    builder: (context, favoriteState) {
+                      bool isLoading =
+                          favoriteState is FavoriteLoading &&
+                              favoriteState.productId == product.id;
+                      bool isFavorite = favoriteState is FavoriteSuccess
+                          ? favoriteState.favorites[product.id] ??
+                          product.isFavorite
+                          : product.isFavorite;
+
+                      return GestureDetector(
+                        onTap: isLoading
+                            ? null
+                            : () {
+                          context.read<FavoriteCubit>().toggleFavorite(
+                            product.id,
+                            isFavorite,
+                          );
                         },
-                      ),
-                    ),
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: AppThemes.lightLightGrey.color,
+                              borderRadius: BorderRadius.circular(16),
+                            ),
+                            height: 48,
+                            width: 48,
+                            margin: const EdgeInsetsDirectional.only(start: 8),
+                            child: isLoading
+                                ? Center(
+                              child: SizedBox(
+                                height: 24,
+                                width: 24,
+                                child: CircularProgressIndicator(
+                                  color: AppThemes.greenColor.color,
+                                  strokeWidth: 2,
+                                ),
+                              ),
+                            )
+                                : Icon(
+                              Icons.favorite,
+                              color: isFavorite
+                                  ? AppThemes.greenColor.color
+                                  : AppThemes.lightGrey.color,
+                            ),
+                          ),
+                        ),
+                      );
+                    },
                   ),
                 ],
               ),
@@ -155,16 +147,6 @@ class _ProductDetailsState extends State<ProductDetails> {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text(
-                              "${(quantity * product.price).toStringAsFixed(2)} ر.س",
-                              textDirection: TextDirection.rtl,
-                              style: const TextStyle(
-                                color: Colors.white,
-                                fontFamily: "Tajawal",
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
                             GestureDetector(
                               onTap: isLoading
                                   ? null
@@ -176,16 +158,6 @@ class _ProductDetailsState extends State<ProductDetails> {
                               },
                               child: Row(
                                 children: [
-                                  const Text(
-                                    "اضف الى السلة",
-                                    style: TextStyle(
-                                      fontFamily: "Tajawal",
-                                      color: Colors.white,
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                  const SizedBox(width: 8),
                                   Container(
                                     decoration: BoxDecoration(
                                       color: AppThemes.lightGreen.color,
@@ -211,7 +183,27 @@ class _ProductDetailsState extends State<ProductDetails> {
                                       ),
                                     ),
                                   ),
+                                  const SizedBox(width: 8),
+                                  const Text(
+                                    "اضف الى السلة",
+                                    style: TextStyle(
+                                      fontFamily: "Tajawal",
+                                      color: Colors.white,
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
                                 ],
+                              ),
+                            ),
+                            Text(
+                              "${(quantity * product.price).toStringAsFixed(2)} ر.س",
+                              textDirection: TextDirection.rtl,
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontFamily: "Tajawal",
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
                               ),
                             ),
                           ],
@@ -224,7 +216,7 @@ class _ProductDetailsState extends State<ProductDetails> {
               body: SafeArea(
                 child: SingleChildScrollView(
                   child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisSize: MainAxisSize.max,
                     children: [
                       ProductImageCarousel(productImages: productImages),
@@ -234,30 +226,15 @@ class _ProductDetailsState extends State<ProductDetails> {
                         child: Row(
                           children: [
                             Text(
-                              "${product.priceBeforeDiscount} ر.س",
-                              textDirection: TextDirection.rtl,
+                              product.title,
                               style: TextStyle(
-                                fontWeight: FontWeight.normal,
-                                fontSize: 14,
                                 fontFamily: "Tajawal",
-                                color: AppThemes.greenColor.color,
-                                decoration: TextDecoration.lineThrough,
-                                decorationColor: AppThemes.greenColor.color,
-                                decorationThickness: 2,
-                              ),
-                            ),
-                            const SizedBox(width: 3),
-                            Text(
-                              "${product.price} ر.س",
-                              textDirection: TextDirection.rtl,
-                              style: TextStyle(
+                                fontSize: 18,
                                 fontWeight: FontWeight.bold,
-                                fontSize: 16,
-                                fontFamily: "Tajawal",
                                 color: AppThemes.greenColor.color,
                               ),
                             ),
-                            const SizedBox(width: 3),
+                            const Spacer(),
                             Text(
                               "${(product.discount * 100).toInt()}%",
                               textDirection: TextDirection.rtl,
@@ -268,14 +245,27 @@ class _ProductDetailsState extends State<ProductDetails> {
                                 color: Colors.red,
                               ),
                             ),
-                            const Spacer(),
+                            const SizedBox(width: 3),
                             Text(
-                              product.title,
+                              "${product.price} ر.س",
                               style: TextStyle(
-                                fontFamily: "Tajawal",
-                                fontSize: 18,
                                 fontWeight: FontWeight.bold,
+                                fontSize: 16,
+                                fontFamily: "Tajawal",
                                 color: AppThemes.greenColor.color,
+                              ),
+                            ),
+                            const SizedBox(width: 3),
+                            Text(
+                              "${product.priceBeforeDiscount} ر.س",
+                              style: TextStyle(
+                                fontWeight: FontWeight.normal,
+                                fontSize: 14,
+                                fontFamily: "Tajawal",
+                                color: AppThemes.greenColor.color,
+                                decoration: TextDecoration.lineThrough,
+                                decorationColor: AppThemes.greenColor.color,
+                                decorationThickness: 2,
                               ),
                             ),
                           ],
@@ -287,6 +277,16 @@ class _ProductDetailsState extends State<ProductDetails> {
                         child: Row(
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
+                            Text(
+                              "السعر / 1${product.unit.name}",
+                              style: TextStyle(
+                                color: AppThemes.lightGrey.color,
+                                fontFamily: "Tajawal",
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            const Spacer(),
                             Container(
                               decoration: BoxDecoration(
                                 color: AppThemes.lightLightGrey.color,
@@ -353,16 +353,6 @@ class _ProductDetailsState extends State<ProductDetails> {
                                 ],
                               ),
                             ),
-                            const Spacer(),
-                            Text(
-                              "السعر / 1${product.unit.name}",
-                              style: TextStyle(
-                                color: AppThemes.lightGrey.color,
-                                fontFamily: "Tajawal",
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
                           ],
                         ),
                       ),
@@ -370,18 +360,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 16.0),
                         child: Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
                           children: [
-                            Text(
-                              product.id.toString(),
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 18,
-                                color: AppThemes.lightGrey.color,
-                                fontFamily: "Tajawal",
-                              ),
-                            ),
-                            const SizedBox(width: 10),
                             Text(
                               "كود المنتج",
                               style: TextStyle(
@@ -391,48 +370,46 @@ class _ProductDetailsState extends State<ProductDetails> {
                                 fontFamily: "Tajawal",
                               ),
                             ),
-                          ],
-                        ),
-                      ),
-                      const SizedBox(height: 35),
-                      Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 16.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
+                            const SizedBox(width: 10),
                             Text(
-                              "تفاصيل المنتج",
+                              product.id.toString(),
                               style: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 fontSize: 18,
-                                color: AppThemes.greenColor.color,
+                                color: AppThemes.lightGrey.color,
                                 fontFamily: "Tajawal",
                               ),
                             ),
                           ],
                         ),
                       ),
+                      const SizedBox(height: 35),
+                      Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 16.0),
+                        child: Text(
+                          "تفاصيل المنتج",
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 18,
+                            color: AppThemes.greenColor.color,
+                            fontFamily: "Tajawal",
+                          ),
+                        ),
+                      ),
                       const SizedBox(height: 10),
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            Expanded(
-                              child: Text(
-                                product.description,
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 18,
-                                  color: AppThemes.lightGrey.color,
-                                  fontFamily: "Tajawal",
-                                ),
-                                maxLines: 4,
-                                overflow: TextOverflow.ellipsis,
-                                textDirection: TextDirection.rtl,
-                              ),
-                            ),
-                          ],
+                        child: Text(
+                          product.description,
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 18,
+                            color: AppThemes.lightGrey.color,
+                            fontFamily: "Tajawal",
+                          ),
+                          maxLines: 4,
+                          overflow: TextOverflow.ellipsis,
+                          textDirection: TextDirection.rtl,
                         ),
                       ),
                       const SizedBox(height: 10),
@@ -444,22 +421,22 @@ class _ProductDetailsState extends State<ProductDetails> {
                         child: Row(
                           children: [
                             Text(
-                              "عرض الكل",
-                              style: TextStyle(
-                                fontWeight: FontWeight.normal,
-                                fontFamily: "Tajawal",
-                                fontSize: 18,
-                                color: AppThemes.greenColor.color,
-                              ),
-                            ),
-                            Spacer(),
-                            Text(
                               "التقييمات",
                               style: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 fontSize: 18,
                                 color: AppThemes.greenColor.color,
                                 fontFamily: "Tajawal",
+                              ),
+                            ),
+                            Spacer(),
+                            Text(
+                              "عرض الكل",
+                              style: TextStyle(
+                                fontWeight: FontWeight.normal,
+                                fontFamily: "Tajawal",
+                                fontSize: 18,
+                                color: AppThemes.greenColor.color,
                               ),
                             ),
                           ],

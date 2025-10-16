@@ -8,10 +8,12 @@ import 'package:skydive/core/utils/extensions.dart';
 import '../../../core/routes/routes.dart';
 import '../../../core/utils/app_theme.dart';
 import '../../../core/widgets/custom_app_bar/custom_app_bar.dart';
+import '../../../core/widgets/custom_message_dialog.dart';
 import '../../../core/widgets/order_complete/payment_option.dart';
 import '../../../core/widgets/wallet/mastercard_widget.dart';
 import '../../../core/widgets/wallet/visa_card_widget.dart';
 import '../../../gen/assets.gen.dart';
+import '../../../models/user_model.dart';
 import '../../address/address/cubit/address_cubit.dart';
 import '../../address/address/cubit/address_state.dart';
 import '../../address/address/model/address_model.dart';
@@ -38,7 +40,6 @@ class _OrderCompleteState extends State<OrderComplete> {
   int? selectedAddressId;
   Map<String, dynamic>? selectedCard;
   final TextEditingController notesController = TextEditingController();
-  UserData? userData;
   final Map<int, String> addressDisplayCache = {};
   late OrderCubit orderCubit;
   late CurrentAddressesCubit addressesCubit;
@@ -49,7 +50,6 @@ class _OrderCompleteState extends State<OrderComplete> {
     orderCubit = OrderCubit(OrderService(ServerGate.i));
     addressesCubit = CurrentAddressesCubit(CurrentAddressesService(ServerGate.i));
     addressesCubit.fetchAddresses();
-    _loadUserData();
   }
 
   @override
@@ -58,28 +58,6 @@ class _OrderCompleteState extends State<OrderComplete> {
     addressesCubit.close();
     notesController.dispose();
     super.dispose();
-  }
-
-  Future<void> _loadUserData() async {
-    final prefs = await SharedPreferences.getInstance();
-    final userDataJson = prefs.getString('user_data');
-    if (userDataJson != null) {
-      try {
-        final userDataMap = jsonDecode(userDataJson) as Map<String, dynamic>;
-        setState(() {
-          userData = UserData.fromJson(userDataMap);
-        });
-      } catch (e) {
-        print('Error parsing user data: $e');
-        setState(() {
-          userData = UserData(fullname: 'غير معروف', phone: 'غير معروف');
-        });
-      }
-    } else {
-      setState(() {
-        userData = UserData(fullname: 'غير معروف', phone: 'غير معروف');
-      });
-    }
   }
 
   Future<String> _getAddressDisplayString(CurrentAddressesModel address) async {
@@ -252,7 +230,7 @@ class _OrderCompleteState extends State<OrderComplete> {
                     selectedCard = newCard;
                     selectedMethod = cardType.toLowerCase();
                   });
-                  //showCustomMessageDialog(context, 'تم إضافة البطاقة بنجاح', autoDismissDuration: const Duration(seconds: 1));
+                  showCustomMessageDialog(context, 'تم إضافة البطاقة بنجاح',);
                 },
               );
             },
@@ -308,7 +286,7 @@ class _OrderCompleteState extends State<OrderComplete> {
                                     selectedMethod = cardType.toLowerCase();
                                   });
                                   if (value == true) {
-                                    //showCustomMessageDialog(context, 'تم اختيار البطاقة بنجاح', autoDismissDuration: const Duration(seconds: 1));
+                                    showCustomMessageDialog(context, 'تم اختيار البطاقة بنجاح',);
                                   }
                                 },
                               )
@@ -324,7 +302,7 @@ class _OrderCompleteState extends State<OrderComplete> {
                                     selectedMethod = cardType.toLowerCase();
                                   });
                                   if (value == true) {
-                                    //showCustomMessageDialog(context, 'تم اختيار البطاقة بنجاح', autoDismissDuration: const Duration(seconds: 1));
+                                    showCustomMessageDialog(context, 'تم اختيار البطاقة بنجاح', );
                                   }
                                 },
                               ),
@@ -396,7 +374,7 @@ class _OrderCompleteState extends State<OrderComplete> {
                   selectedMethod = cardType.toLowerCase();
                 });
                 Navigator.of(bottomSheetContext).pop();
-                //showCustomMessageDialog(context, 'تم إضافة البطاقة بنجاح', autoDismissDuration: const Duration(seconds: 1));
+                showCustomMessageDialog(context, 'تم إضافة البطاقة بنجاح',);
               },
             );
           },
@@ -412,8 +390,6 @@ class _OrderCompleteState extends State<OrderComplete> {
 
     final double total = cartData['total'] ?? 0.0;
     final double discount = cartData['discount'] ?? 0.0;
-    final String userName = userData?.fullname ?? "تحميل...";
-    final String userPhone = userData?.phone ?? "تحميل...";
     final bool isCashDisabled = total > 150;
 
     return MultiBlocProvider(
@@ -424,9 +400,9 @@ class _OrderCompleteState extends State<OrderComplete> {
       child: BlocListener<OrderCubit, OrderState>(
         listener: (context, state) {
           if (state is OrderSuccess) {
-            //showCustomMessageDialog(context, 'تم إنشاء الطلب بنجاح', autoDismissDuration: const Duration(seconds: 1));
+            showCustomMessageDialog(context, 'تم إنشاء الطلب بنجاح',);
           } else if (state is OrderError) {
-            //showCustomMessageDialog(context, state.message, autoDismissDuration: const Duration(seconds: 1));
+            showCustomMessageDialog(context, state.message,);
           }
         },
         child: Scaffold(
@@ -457,7 +433,7 @@ class _OrderCompleteState extends State<OrderComplete> {
                         ),
                         const SizedBox(width: 5),
                         Text(
-                          userName,
+                          UserModel.i.fullname,
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 18,
@@ -481,7 +457,7 @@ class _OrderCompleteState extends State<OrderComplete> {
                         ),
                         const SizedBox(width: 5),
                         Text(
-                          userPhone,
+                          UserModel.i.phone,
                           textDirection: TextDirection.rtl,
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
@@ -951,11 +927,11 @@ class _OrderCompleteState extends State<OrderComplete> {
                                 return ElevatedButton(
                                   onPressed: () {
                                     if (selectedDate == null || selectedTime == null || selectedAddressId == null) {
-                                      //showCustomMessageDialog(context, 'يرجى اختيار التاريخ، الوقت، والعنوان', autoDismissDuration: const Duration(seconds: 2));
+                                      showCustomMessageDialog(context, 'يرجى اختيار التاريخ، الوقت، والعنوان', );
                                       return;
                                     }
                                     if (selectedMethod != "cash" && selectedCard == null) {
-                                      //showCustomMessageDialog(context, 'يرجى اختيار بطاقة دفع', autoDismissDuration: const Duration(seconds: 2));
+                                      showCustomMessageDialog(context, 'يرجى اختيار بطاقة دفع', );
                                       return;
                                     }
                                     orderCubit.createOrder(

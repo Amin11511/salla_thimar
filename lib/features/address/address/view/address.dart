@@ -106,7 +106,10 @@ class Address extends StatelessWidget {
                         if (index < addresses.length) {
                           return Padding(
                             padding: const EdgeInsets.only(bottom: 20.0),
-                            child: AddressCard(address: addresses[index]),
+                            child: AddressCard(
+                              address: addresses[index],
+                              parentContext: context,
+                            ),
                           );
                         } else {
                           return SizedBox(
@@ -118,8 +121,16 @@ class Address extends StatelessWidget {
                               strokeWidth: 2,
                               dashPattern: const [6, 3],
                               child: ElevatedButton(
-                                onPressed: () {
-                                  Navigator.pushNamed(context, NamedRoutes.addAddress);
+                                onPressed: () async {
+                                  final currentCubit = context.read<CurrentAddressesCubit>();
+                                  final result = await Navigator.pushNamed(
+                                    context,
+                                    NamedRoutes.addAddress,
+                                    arguments: currentCubit,
+                                  );
+                                  if (result == true) {
+                                    currentCubit.fetchAddresses();
+                                  }
                                 },
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: AppThemes.whiteColor.color,

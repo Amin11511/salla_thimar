@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:skydive/core/utils/app_theme.dart';
 import 'package:skydive/core/utils/extensions.dart';
-
 import '../../../gen/assets.gen.dart';
 
 class VisaCardWidget extends StatelessWidget {
@@ -21,18 +20,16 @@ class VisaCardWidget extends StatelessWidget {
     this.isSelected = false,
     this.onDelete,
     this.onToggleSelect,
-    this.height = 0.22, // كنسبة من ارتفاع الشاشة عند الاستخدام داخل MediaQuery
+    this.height = 0.22,
   });
 
   String _formatCardNumber(String input) {
-    // لو المستخدم مرر رقم كامل (أرقام فقط وبطول >= 4) هعرضه كـ "**** **** **** 1234"
     final digitsOnly = input.replaceAll(RegExp(r'\s+'), '');
     if (RegExp(r'^\*').hasMatch(input)) return input; // already masked
     if (RegExp(r'^\d{4,}$').hasMatch(digitsOnly) && digitsOnly.length >= 4) {
       final last4 = digitsOnly.substring(digitsOnly.length - 4);
       return '**** **** **** $last4';
     }
-    // وإلا رجع النص كما هو
     return input;
   }
 
@@ -107,6 +104,7 @@ class VisaCardWidget extends StatelessWidget {
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(4),
                   ),
+                  side: const BorderSide(color: Colors.white, width: 2),
                   checkColor: Colors.black,
                   activeColor: Colors.white,
                 ),
@@ -134,6 +132,7 @@ class VisaCardWidget extends StatelessWidget {
             bottom: 20,
             child: Text(
               displayedNumber,
+              textDirection: TextDirection.ltr,
               style: const TextStyle(
                 color: Colors.white,
                 fontSize: 16,
